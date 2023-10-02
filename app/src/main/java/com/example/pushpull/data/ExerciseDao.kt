@@ -22,5 +22,5 @@ interface ExerciseDao {
     suspend fun getAllExercises(): List<Exercise>
 
     @Query("SELECT * FROM EXERCISE WHERE muscleGroup = :muscleGroup")
-    suspend fun getExercisesByMuscleGroup(muscleGroup: String): Flow<List<Exercise>>
+    suspend fun getExercisesByMuscleGroup(muscleGroup: String): List<Exercise>
 }

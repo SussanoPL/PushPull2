@@ -19,5 +19,5 @@ interface WorkoutHistoryDao {
     suspend fun deleteHistory(workoutHistory: WorkoutHistory)
 
     @Query("SELECT * FROM WORKOUT_HISTORY")
-    suspend fun getAllHistories(): Flow<List<WorkoutHistory>>
+    suspend fun getAllHistories(): List<WorkoutHistory>
 }

@@ -20,5 +20,5 @@ interface WorkoutPlanDao {
     suspend fun deletePlan(workoutPlan: WorkoutPlan)
 
     @Query("SELECT * FROM WORKOUT_PLAN")
-    suspend fun getAllPlans(): Flow<List<WorkoutPlan>>
+    suspend fun getAllPlans(): List<WorkoutPlan>
 }
