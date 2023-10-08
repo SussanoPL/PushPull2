@@ -28,20 +28,20 @@ class MainActivity : AppCompatActivity() {
         exerciseDao = gymDatabase.exerciseDao()
 
         val exercise1 = Exercise(
-            name = "Wyciskanie hantli na ławce pochyłej",
-            muscleGroup = "Klatka piersiowa",
-            equipment = "Hantle"
+            name = "Podciąganie na drążku",
+            muscleGroup = "Plecy",
+            equipment = "Drążek"
         )
         val exercise2 = Exercise(
-            name = "Wyciskanie sztangi na ławce pochyłej",
-            muscleGroup = "Klatka piersiowa",
-            equipment = "Sztanga"
+            name = "Przyciąganie drążka",
+            muscleGroup = "Plecy",
+            equipment = "Wyciąg"
         )
 
 
 
 
-        GlobalScope.launch(Dispatchers.IO) {
+ /*       GlobalScope.launch(Dispatchers.IO) {
 
             exerciseDao.insertExercise(exercise1)
             exerciseDao.insertExercise(exercise2)
@@ -49,6 +49,6 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        }
+        }*/
     }
 }
