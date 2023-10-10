@@ -27,28 +27,36 @@ class MainActivity : AppCompatActivity() {
         gymDatabase = GymDatabase.getDatabase(this)
         exerciseDao = gymDatabase.exerciseDao()
 
+
+
         val exercise1 = Exercise(
-            name = "Podciąganie na drążku",
-            muscleGroup = "Plecy",
-            equipment = "Drążek"
+            name = "Przysiady ze sztangą",
+            muscleGroup = "Uda",
+            equipment = "Sztanga"
         )
+
         val exercise2 = Exercise(
-            name = "Przyciąganie drążka",
-            muscleGroup = "Plecy",
-            equipment = "Wyciąg"
+            name = "Przysiady bułgarskie",
+            muscleGroup = "Uda",
+            equipment = "Hantle"
+        )
+
+        val exercise4 = Exercise(
+            name = "Uginanie nóg w tył na maszynie",
+            muscleGroup = "Uda",
+            equipment = "Maszyna"
         )
 
 
 
 
- /*       GlobalScope.launch(Dispatchers.IO) {
-
+        GlobalScope.launch(Dispatchers.IO){
             exerciseDao.insertExercise(exercise1)
             exerciseDao.insertExercise(exercise2)
+            exerciseDao.insertExercise(exercise4)
 
 
 
-
-        }*/
+        }
     }
 }

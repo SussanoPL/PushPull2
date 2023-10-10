@@ -23,4 +23,10 @@ interface ExerciseDao {
 
     @Query("SELECT * FROM EXERCISE WHERE muscleGroup = :muscleGroup")
     suspend fun getExercisesByMuscleGroup(muscleGroup: String): List<Exercise>
+
+    @Query("SELECT * FROM exercise WHERE id = :exerciseId")
+    suspend fun getExerciseById(exerciseId: Long): Exercise?
+
+    @Query("DELETE FROM Exercise WHERE id BETWEEN :startId AND :endId")
+    suspend fun deleteExercisesByIdRange(startId: Long, endId: Long)
 }
