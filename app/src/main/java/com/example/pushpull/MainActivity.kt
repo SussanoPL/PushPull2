@@ -2,10 +2,13 @@ package com.example.pushpull
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.navigation.Navigation
+import androidx.navigation.ui.NavigationUI
 import com.example.pushpull.data.Exercise
 import com.example.pushpull.data.ExerciseDao
 import com.example.pushpull.data.GymDatabase
 import com.example.pushpull.databinding.ActivityMainBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.take
@@ -21,42 +24,18 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(R.layout.activity_main)
+        setContentView(binding.root) // binding.root przez lateinit
+
+        val bottomNavigation = findViewById<BottomNavigationView>(R.id.bottomNav)
+        val navController = Navigation.findNavController(this, R.id.nav_host_fragment)
+
+        NavigationUI.setupWithNavController(bottomNavigation, navController)
 
         // Inicjalizacja bazy danych i DAO w metodzie onCreate
-        gymDatabase = GymDatabase.getDatabase(this)
-        exerciseDao = gymDatabase.exerciseDao()
+       // gymDatabase = GymDatabase.getDatabase(this)
+        //exerciseDao = gymDatabase.exerciseDao()
 
 
 
-        val exercise1 = Exercise(
-            name = "Przysiady ze sztangą",
-            muscleGroup = "Uda",
-            equipment = "Sztanga"
-        )
-
-        val exercise2 = Exercise(
-            name = "Przysiady bułgarskie",
-            muscleGroup = "Uda",
-            equipment = "Hantle"
-        )
-
-        val exercise4 = Exercise(
-            name = "Uginanie nóg w tył na maszynie",
-            muscleGroup = "Uda",
-            equipment = "Maszyna"
-        )
-
-
-
-
-        GlobalScope.launch(Dispatchers.IO){
-            exerciseDao.insertExercise(exercise1)
-            exerciseDao.insertExercise(exercise2)
-            exerciseDao.insertExercise(exercise4)
-
-
-
-        }
     }
 }
