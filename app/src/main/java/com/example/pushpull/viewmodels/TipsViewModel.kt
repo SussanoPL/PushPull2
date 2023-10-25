@@ -11,7 +11,11 @@ class TipsViewModel : ViewModel() {
 
 
     init {
-        _tips.value = listOf(
+        _tips.value = generateRandomTips()
+    }
+
+    private fun generateRandomTips(): List<String> {
+        val allTips = listOf(
             "Nie wszystkie ćwiczenia są dla Ciebie, jeśli jakieś ciężko idzie warto je zamienić, znajdzie się odpowiednie ;).",
             "Gdy trenujesz plecy warto użyć małpiego chwytu.",
             "Nie zapominaj o rozciąganiu i rozgrzewce przed trenigiem, są bardzo ważne.",
@@ -21,19 +25,17 @@ class TipsViewModel : ViewModel() {
             "Korzystaj ze strefy wolnych ciężarów, pozwoli Ci to na lepszą kontrolę mięśniową i zwiększy jej świadomość.",
             "Sen jest bardzo ważnym aspektem trenowania, staraj się wysypiać minimum 8 godzin.",
             "Odżywianie stanowi ponad połowę sukcesu, staraj się dostarczać naturalnych produktów wysokobiałkowych.",
-            "Jeśli Twoja siłownia posiada saunę to rozważ korzystanie z niej w dniach przerwy od treningu",
-            "Gdy ćwiczenia idą Ci za łatwo, zwiększaj ciężar.")
+            "Jeśli Twoja siłownia posiada saunę to rozważ korzystanie z niej w dniach przerwy od treningu.",
+            "Gdy ćwiczenia idą Ci za łatwo, zwiększaj ciężar.",
+            "Pamiętaj o dobrym posiłku przed treningiem, dzięki niemu będziesz miał więcej energii.",
+            "Trenuj klatke,barki i triceps w jednym dniu a w drugim plecy, brzuch i biceps. Trzeci zostaw sobie na nogi."
+        )
+
+        val randomTips = allTips.shuffled()
+        return randomTips.take(10)
     }
 
-    fun getRandomTip(): String {
-        val tipsList = _tips.value ?: emptyList()
-        return if (tipsList.isNotEmpty()) {
-            val randomIndex = (0 until tipsList.size).random()
-            tipsList[randomIndex]
-        } else {
-            "Brak porad"
-        }
-    }
+
 
 
 }

@@ -23,7 +23,7 @@ class TipsFragment : Fragment() {
         binding = FragmentTipsBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        val adapter = TipsAdapter(viewModel)
+        val adapter = TipsAdapter(viewModel.tips.value.orEmpty())
         binding.tipsRecyclerView.adapter = adapter
 
 

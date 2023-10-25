@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.pushpull.R
 import com.example.pushpull.viewmodels.TipsViewModel
 
-class TipsAdapter(private val viewModel: TipsViewModel) : RecyclerView.Adapter<TipsAdapter.TipsViewHolder>() {
+class TipsAdapter(private val tips: List<String>) : RecyclerView.Adapter<TipsAdapter.TipsViewHolder>() {
     class TipsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tipText: TextView = itemView.findViewById(R.id.tipText)
     }
@@ -22,12 +22,12 @@ class TipsAdapter(private val viewModel: TipsViewModel) : RecyclerView.Adapter<T
     }
 
     override fun onBindViewHolder(holder: TipsViewHolder, position: Int) {
-        val randomTip = viewModel.getRandomTip()
-        holder.tipText.text = randomTip
+        val tip = tips[position]
+        holder.tipText.text = tip
     }
 
     override fun getItemCount(): Int {
-        return 10
+        return tips.size
     }
 
 
