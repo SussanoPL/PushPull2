@@ -8,16 +8,33 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.pushpull.HomeFragment"
-        android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        android:label="Plan treningowy"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
+    </fragment>
     <fragment
         android:id="@+id/historyFragment"
         android:name="com.example.pushpull.HistoryFragment"
-        android:label="fragment_history"
+        android:label="Historia treningów"
         tools:layout="@layout/fragment_history" />
     <fragment
         android:id="@+id/tipsFragment"
         android:name="com.example.pushpull.TipsFragment"
-        android:label="fragment_tips"
+        android:label="Porady"
         tools:layout="@layout/fragment_tips" />
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.example.pushpull.SearchFragment"
+        android:label="Baza danych ćwiczeń"
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_searchFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim" />
+    </fragment>
 </navigation>

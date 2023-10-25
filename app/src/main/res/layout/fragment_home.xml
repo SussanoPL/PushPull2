@@ -6,11 +6,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".HomeFragment">
 
-    <EditText
+    <Button
         android:id="@+id/exSearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Wyszukaj ćwiczenie"
+        android:textSize="20sp"
         android:gravity="center"
         android:inputType="text"
         android:background="@drawable/search_bar_background"

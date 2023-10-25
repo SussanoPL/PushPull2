@@ -20,10 +20,19 @@ class TipsViewModel : ViewModel() {
             "Pamiętaj, ćwiczenia wielostawowe są bardzo ważne na początek, bo angażują wiele grup mięśni.",
             "Korzystaj ze strefy wolnych ciężarów, pozwoli Ci to na lepszą kontrolę mięśniową i zwiększy jej świadomość.",
             "Sen jest bardzo ważnym aspektem trenowania, staraj się wysypiać minimum 8 godzin.",
-            "Odżywianie stanowi ponad połowę sukcesu, staraj się dostarczać naturalnych produktów wysokobiałkowych."
-            )
-        Log.d("TipsViewModel", "Tips: $tips")
+            "Odżywianie stanowi ponad połowę sukcesu, staraj się dostarczać naturalnych produktów wysokobiałkowych.",
+            "Jeśli Twoja siłownia posiada saunę to rozważ korzystanie z niej w dniach przerwy od treningu",
+            "Gdy ćwiczenia idą Ci za łatwo, zwiększaj ciężar.")
+    }
 
+    fun getRandomTip(): String {
+        val tipsList = _tips.value ?: emptyList()
+        return if (tipsList.isNotEmpty()) {
+            val randomIndex = (0 until tipsList.size).random()
+            tipsList[randomIndex]
+        } else {
+            "Brak porad"
+        }
     }
 
 

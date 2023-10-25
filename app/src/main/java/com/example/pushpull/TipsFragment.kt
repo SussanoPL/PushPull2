@@ -8,30 +8,24 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pushpull.adapters.TipsAdapter
+import com.example.pushpull.databinding.FragmentTipsBinding
 import com.example.pushpull.viewmodels.TipsViewModel
 
-
 class TipsFragment : Fragment() {
+    private lateinit var binding: FragmentTipsBinding
     private val viewModel: TipsViewModel by viewModels()
-    private lateinit var tipsRecyclerView: RecyclerView
-
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        binding = FragmentTipsBinding.inflate(inflater, container, false)
+        val view = binding.root
 
-        val view = inflater.inflate(R.layout.fragment_tips, container, false)
+        val adapter = TipsAdapter(viewModel)
+        binding.tipsRecyclerView.adapter = adapter
 
-        tipsRecyclerView = view.findViewById(R.id.tipsRecyclerView)
-        val adapter = TipsAdapter(emptyList()) // Możesz początkowo użyć pustej listy
-        tipsRecyclerView.adapter = adapter
-
-        // Obserwowanie danych ViewModel i aktualizowanie adaptera
-        viewModel.tips.observe(viewLifecycleOwner, { tips ->
-            adapter.updateTips(tips)
-        })
 
         return view
     }
