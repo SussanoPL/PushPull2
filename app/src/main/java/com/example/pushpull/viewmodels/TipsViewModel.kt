@@ -7,38 +7,50 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.pushpull.R
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
 
 class TipsViewModel(application: Application) : AndroidViewModel(application) {
     private val _tips = MutableLiveData<List<String>>()
+    private val firestore = FirebaseFirestore.getInstance()
     val tips: LiveData<List<String>> get() = _tips
 
+    // Pole do przechowywania ostatnio pobranych porad
+    private var lastFetchedTips: List<String>? = null
+
     init {
-        _tips.value = generateRandomTips()
+        loadTipsFromFirestore()
     }
 
 
-    private fun generateRandomTips(): List<String> {
-        val allTips = loadTipsFromJson()
-
-        val randomTips = allTips.shuffled()
+    private fun generateRandomTips(tips: List<String>): List<String> {
+        val randomTips = tips.shuffled()
         return randomTips.take(10)
     }
 
-    data class TipsData(val allTips: List<String>)
+    private fun loadTipsFromFirestore() {
+        val docRef = firestore.collection("tipsCollection").document("tipsDocument")
 
+        docRef.addSnapshotListener { snapshot, e ->
+            if (e != null) {
+                Log.w("TipsViewModel", "Listen failed.", e)
+                return@addSnapshotListener
+            }
 
-    private fun loadTipsFromJson(): List<String> {
-        val inputStream = getApplication<Application>().resources.openRawResource(R.raw.tips)
-        val json = inputStream.bufferedReader().use { it.readText() }
-
-        val gson = Gson()
-        val tipsData = gson.fromJson(json, TipsData::class.java)
-
-        return tipsData.allTips
+            if (snapshot != null && snapshot.exists()) {
+                val tipsData = snapshot.toObject(TipsData::class.java)
+                if (tipsData != null) {
+                    // Sprawdzanie, czy nowe dane różnią się od ostatnio pobranych danych
+                    if (lastFetchedTips == null || lastFetchedTips != tipsData.allTips) {
+                        lastFetchedTips = tipsData.allTips
+                        _tips.value = generateRandomTips(tipsData.allTips)
+                    }
+                }
+            } else {
+                Log.d("TipsViewModel", "Current data: null")
+            }
+        }
     }
 
-
-
-
+    data class TipsData(val allTips: List<String> = listOf())
 }

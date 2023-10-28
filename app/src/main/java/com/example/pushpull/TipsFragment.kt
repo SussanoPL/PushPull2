@@ -30,8 +30,6 @@ class TipsFragment : Fragment() {
         tipsViewModel.tips.observe(viewLifecycleOwner, Observer { tipsList ->
             adapter.updateTips(tipsList)
         })
-
-
         return view
     }
 }

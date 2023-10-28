@@ -2,28 +2,21 @@ package com.example.pushpull
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Menu
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
-import androidx.navigation.ui.setupActionBarWithNavController
-import com.example.pushpull.data.Exercise
-import com.example.pushpull.data.ExerciseDao
-import com.example.pushpull.data.GymDatabase
+import com.example.pushpull.data.FirebaseExercise
 import com.example.pushpull.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.launch
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
-    //lateinit var gymDatabase: GymDatabase
-    //lateinit var exerciseDao: ExerciseDao
-    //to jest firebase
+
+
+    private lateinit var dbRef : DatabaseReference
 
 
 
@@ -31,6 +24,24 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root) // binding.root przez lateinit
+        dbRef = FirebaseDatabase.getInstance().getReference("Exercise")
+
+        // Dodanie testowego ćwiczenia do Firebase
+        val exerciseId = dbRef.push().key!!
+        val testExercise = FirebaseExercise(
+            id = exerciseId,
+            name = "Pompki",
+            muscleGroup = "Klatka piersiowa",
+            equipment = "Brak",
+            description = "Ćwiczenie polegające na podnoszeniu ciała przy pomocy rąk."
+        )
+/*        dbref.child(exerciseid).setvalue(testexercise)
+            .addonsuccesslistener {
+                log.d("firebasesuccess", "ćwiczenie dodane pomyślnie!")
+            }
+            .addonfailurelistener { exception ->
+                log.e("firebaseerror", "błąd podczas dodawania ćwiczenia: ", exception)
+            }*/
 
         val bottomNavigation = findViewById<BottomNavigationView>(R.id.bottomNav)
         navController = Navigation.findNavController(this, R.id.nav_host_fragment)
@@ -39,10 +50,6 @@ class MainActivity : AppCompatActivity() {
         NavigationUI.setupActionBarWithNavController(this, navController)
 
 
-
-        // Inicjalizacja bazy danych i DAO w metodzie onCreate
-        //gymDatabase = GymDatabase.getDatabase(this)
-       // exerciseDao = gymDatabase.exerciseDao()
 
 
         navController.addOnDestinationChangedListener { _, destination, _ ->

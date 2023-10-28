@@ -6,6 +6,11 @@ plugins {
     id 'com.google.devtools.ksp' version '1.8.0-1.0.8'
     id 'androidx.navigation.safeargs.kotlin'
     id 'kotlin-kapt'
+    // Add the Google services Gradle plugin
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.appdistribution'
+    id 'com.google.firebase.crashlytics'
+
 
 }
 
@@ -59,8 +64,16 @@ dependencies {
 
 
     implementation "androidx.room:room-runtime:$room_version"
+    implementation 'com.google.firebase:firebase-firestore-ktx:24.9.1'
     ksp "androidx.room:room-compiler:$room_version"
 
     // optional - Kotlin Extensions and Coroutines support for Room
     implementation "androidx.room:room-ktx:$room_version"
+
+    // Import the Firebase BoM
+    implementation platform('com.google.firebase:firebase-bom:32.4.0')
+    implementation("com.google.firebase:firebase-database-ktx")
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+
+
 }
