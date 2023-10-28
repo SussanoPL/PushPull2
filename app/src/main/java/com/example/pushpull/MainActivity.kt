@@ -3,6 +3,7 @@ package com.example.pushpull
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
@@ -20,8 +21,9 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
-    lateinit var gymDatabase: GymDatabase
-    lateinit var exerciseDao: ExerciseDao
+    //lateinit var gymDatabase: GymDatabase
+    //lateinit var exerciseDao: ExerciseDao
+    //to jest firebase
 
 
 
@@ -39,8 +41,9 @@ class MainActivity : AppCompatActivity() {
 
 
         // Inicjalizacja bazy danych i DAO w metodzie onCreate
-       // gymDatabase = GymDatabase.getDatabase(this)
-        //exerciseDao = gymDatabase.exerciseDao()
+        //gymDatabase = GymDatabase.getDatabase(this)
+       // exerciseDao = gymDatabase.exerciseDao()
+
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.id == R.id.historyFragment
