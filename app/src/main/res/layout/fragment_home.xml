@@ -13,15 +13,10 @@
         android:hint="Wyszukaj ćwiczenie"
         android:textSize="20sp"
         android:gravity="center"
-        android:inputType="text"
         android:background="@drawable/search_bar_background"
         android:paddingStart="16dp"
         android:paddingEnd="40dp"
         android:drawableRight="@android:drawable/ic_search_category_default"
-        android:drawablePadding="8dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/bottomNav"/>
+        android:drawablePadding="8dp" />
 
 </FrameLayout>

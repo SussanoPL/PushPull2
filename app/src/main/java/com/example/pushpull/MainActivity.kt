@@ -1,7 +1,9 @@
 package com.example.pushpull
 
+import android.content.ContentValues.TAG
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
@@ -10,38 +12,17 @@ import com.example.pushpull.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
 
-
-    private lateinit var dbRef : DatabaseReference
-
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root) // binding.root przez lateinit
-        dbRef = FirebaseDatabase.getInstance().getReference("Exercise")
 
-        // Dodanie testowego ćwiczenia do Firebase
-        val exerciseId = dbRef.push().key!!
-        val testExercise = FirebaseExercise(
-            id = exerciseId,
-            name = "Pompki",
-            muscleGroup = "Klatka piersiowa",
-            equipment = "Brak",
-            description = "Ćwiczenie polegające na podnoszeniu ciała przy pomocy rąk."
-        )
-/*        dbref.child(exerciseid).setvalue(testexercise)
-            .addonsuccesslistener {
-                log.d("firebasesuccess", "ćwiczenie dodane pomyślnie!")
-            }
-            .addonfailurelistener { exception ->
-                log.e("firebaseerror", "błąd podczas dodawania ćwiczenia: ", exception)
-            }*/
 
         val bottomNavigation = findViewById<BottomNavigationView>(R.id.bottomNav)
         navController = Navigation.findNavController(this, R.id.nav_host_fragment)
