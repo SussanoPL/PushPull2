@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.example.pushpull.data.FirebaseExercise
 import com.example.pushpull.databinding.ActivityMainBinding
@@ -26,9 +28,31 @@ class MainActivity : AppCompatActivity() {
 
         val bottomNavigation = findViewById<BottomNavigationView>(R.id.bottomNav)
         navController = Navigation.findNavController(this, R.id.nav_host_fragment)
-
-        NavigationUI.setupWithNavController(bottomNavigation, navController)
+        bottomNavigation.setOnItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.homeFragment -> {
+                    popEverythingAndNavigateToHost()
+                    true
+                }
+                else -> false
+            }
+        }
         NavigationUI.setupActionBarWithNavController(this, navController)
+
+        bottomNavigation.setOnItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.homeFragment -> {
+                    popEverythingAndNavigateToHost()
+                    true
+                }
+                R.id.historyFragment, R.id.tipsFragment -> {
+                    val navController = findNavController(R.id.nav_host_fragment)
+                    NavigationUI.onNavDestinationSelected(menuItem, navController)
+                    true
+                }
+                else -> false
+            }
+        }
 
 
 
@@ -48,6 +72,13 @@ class MainActivity : AppCompatActivity() {
     }
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()
+    }
+
+    private fun popEverythingAndNavigateToHost() {
+        val builder = NavOptions.Builder()
+            .setPopUpTo(R.id.nav_graph, false)  // Używam `nav_graph` jako domyślnego ID dla całego grafu nawigacji. Zamień to na właściwe ID twojego grafu nawigacji, jeśli jest inne.
+            .setLaunchSingleTop(true)
+        navController.navigate(R.id.homeFragment, null, builder.build())
     }
 
 

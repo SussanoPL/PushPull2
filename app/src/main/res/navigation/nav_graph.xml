@@ -9,7 +9,7 @@
         android:id="@+id/homeFragment"
         android:name="com.example.pushpull.HomeFragment"
         android:label="Plan treningowy"
-        tools:layout="@layout/fragment_home" >
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_searchFragment"
             app:destination="@id/searchFragment" />
@@ -43,6 +43,14 @@
                 android:name="muscleGroup"
                 app:argType="string" />
         </action>
+        <action
+            android:id="@+id/action_searchFragment_to_exerciseDetailsFragment"
+            app:destination="@id/exerciseDetailsFragment">
+            <argument
+                android:name="name"
+                app:argType="string" />
+        </action>
+
     </fragment>
     <fragment
         android:id="@+id/exerciseListFragment"

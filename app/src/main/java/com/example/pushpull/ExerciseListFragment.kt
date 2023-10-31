@@ -25,12 +25,6 @@ class ExerciseListFragment : Fragment() {
     private lateinit var binding: FragmentExerciseListBinding
     private val viewModel: ExerciseListViewModel by viewModels()
 
-
-
-
-
-
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -65,17 +59,17 @@ class ExerciseListFragment : Fragment() {
         for (exercise in exercises) {
             val textView = TextView(context)
             textView.text = exercise
-            textView.textSize = 24f // Zwiększenie rozmiaru czcionki
-            textView.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white)) // Ustawienie koloru czcionki na biały
-            textView.gravity = Gravity.CENTER // Wyśrodkowanie tekstu w TextView
+            textView.textSize = 24f
+            textView.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white))
+            textView.gravity = Gravity.CENTER
             textView.layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             ).apply {
-                val margin = (8 * resources.displayMetrics.density).toInt() // 8dp jako margines
-                setMargins(margin, margin, margin, margin) // Dodanie marginesu
+                val margin = (8 * resources.displayMetrics.density).toInt()
+                setMargins(margin, margin, margin, margin)
             }
-            textView.background = ContextCompat.getDrawable(requireContext(), R.drawable.rounded_button_background) // Ustawienie tła
+            textView.background = ContextCompat.getDrawable(requireContext(), R.drawable.rounded_button_background)
 
             textView.setOnClickListener {
                 val navController = findNavController()
