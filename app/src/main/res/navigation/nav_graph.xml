@@ -36,5 +36,36 @@
             app:popUpToInclusive="true"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim" />
+        <action
+            android:id="@+id/action_searchFragment_to_exerciseListFragment"
+            app:destination="@id/exerciseListFragment">
+            <argument
+                android:name="muscleGroup"
+                app:argType="string" />
+        </action>
     </fragment>
+    <fragment
+        android:id="@+id/exerciseListFragment"
+        android:name="com.example.pushpull.ExerciseListFragment"
+        android:label="Lista dostępnych ćwiczeń"
+        tools:layout="@layout/fragment_exercise_list" >
+        <action
+            android:id="@+id/action_exerciseListFragment_to_searchFragment"
+            app:destination="@id/searchFragment"
+            app:popUpTo="@id/searchFragment"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_exerciseListFragment_to_exerciseDetailsFragment"
+            app:destination="@id/exerciseDetailsFragment" >
+
+        <argument
+            android:name="name"
+            app:argType="string" />
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/exerciseDetailsFragment"
+        android:name="com.example.pushpull.ExerciseDetailsFragment"
+        android:label="Szczegóły ćwiczenia"
+        tools:layout="@layout/fragment_exercise_details" />
 </navigation>

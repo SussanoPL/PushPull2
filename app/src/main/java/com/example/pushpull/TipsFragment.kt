@@ -34,4 +34,6 @@ class TipsFragment : Fragment() {
         })
         return binding.root
     }
+
+
 }

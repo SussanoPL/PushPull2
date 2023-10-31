@@ -2,8 +2,7 @@ package com.example.pushpull
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.Parcel
-import android.os.Parcelable
+
 import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -13,19 +12,20 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import com.example.pushpull.databinding.FragmentSearchBinding
-import com.example.pushpull.databinding.FragmentTipsBinding
 import com.example.pushpull.viewmodels.SearchViewModel
-import com.google.firebase.firestore.FirebaseFirestore
 
 
 class SearchFragment() : Fragment() {
     private lateinit var binding: FragmentSearchBinding
+    private lateinit var navController: NavController
     private val viewModel: SearchViewModel by viewModels()
+
 
 
 
@@ -40,6 +40,7 @@ class SearchFragment() : Fragment() {
         }
 
         viewModel.muscleGroups.observe(viewLifecycleOwner) { muscleGroups ->
+            binding.muscleGroupContainer.removeAllViews() // Usuń wszystkie widoki przed dodaniem nowych
             muscleGroups.sorted().forEach { addMuscleGroupToUI(it) }
         }
 
@@ -73,11 +74,7 @@ class SearchFragment() : Fragment() {
         if (imageResId != null) {
             imageViewInsideCard.setImageResource(imageResId)
         }
-        imageViewInsideCard.isClickable = true // Ustawiamy, że obrazek jest klikalny
-        imageViewInsideCard.setOnClickListener {
-            // Akcja po kliknięciu w obrazek
-            Toast.makeText(context, "Kliknięto: $muscleGroup", Toast.LENGTH_SHORT).show()
-        }
+
 
         container.addView(cardView)
 
@@ -95,11 +92,24 @@ class SearchFragment() : Fragment() {
         buttonParams.weight = 1f
         button.layoutParams = buttonParams
 
-        button.setOnClickListener {
-            Toast.makeText(context, "Kliknięto: $muscleGroup", Toast.LENGTH_SHORT).show()
-        }
         container.addView(button)
+        cardView.isClickable = false
+        button.isClickable = false
+        button.isFocusable = false
+        button.isFocusableInTouchMode = false
+
+
 
         binding.muscleGroupContainer.addView(container)
+
+        container.setOnClickListener {
+            navController = findNavController()
+            val action = SearchFragmentDirections.actionSearchFragmentToExerciseListFragment(muscleGroup)
+            navController.navigate(action)
+        }
     }
+
+
+
+
 }
