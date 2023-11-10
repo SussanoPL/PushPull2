@@ -26,6 +26,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root) // binding.root przez lateinit
 
 
+
+
         val bottomNavigation = findViewById<BottomNavigationView>(R.id.bottomNav)
         navController = Navigation.findNavController(this, R.id.nav_host_fragment)
         bottomNavigation.setOnItemSelectedListener { menuItem ->
@@ -53,6 +55,9 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
+
+
+
 
 
 

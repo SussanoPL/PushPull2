@@ -1,6 +1,7 @@
 package com.example.pushpull
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,8 @@ import androidx.lifecycle.Observer
 import com.example.pushpull.adapters.TipsAdapter
 import com.example.pushpull.databinding.FragmentTipsBinding
 import com.example.pushpull.viewmodels.TipsViewModel
+import com.google.firebase.firestore.FirebaseFirestore
+
 
 class TipsFragment : Fragment() {
     private lateinit var binding: FragmentTipsBinding
@@ -32,6 +35,8 @@ class TipsFragment : Fragment() {
         viewModel.tips.observe(viewLifecycleOwner, Observer { tipsList ->
             adapter.updateTips(tipsList)
         })
+
+
         return binding.root
     }
 

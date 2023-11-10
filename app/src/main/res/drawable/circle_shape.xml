@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="?attr/circleColor"/> <!-- Użycie atrybutu zamiast bezpośredniego koloru -->
+    <corners android:radius="50dp"/> <!-- Okrągłe rogi tworzące koło -->
+</shape>

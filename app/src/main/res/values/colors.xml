@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="circleColorMo">#E64A19</color>
+    <color name="circleColorWt">#FFD700</color>
+    <color name="circleColorPt">#2ECC71</color>
+    <color name="circleDefColor">#FF3421</color>
+</resources>
