@@ -13,6 +13,13 @@
         <action
             android:id="@+id/action_homeFragment_to_searchFragment"
             app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_trainingFragment"
+            app:destination="@id/trainingFragment">
+            <argument
+                android:name="workout"
+                app:argType="string" />
+        </action>
     </fragment>
     <fragment
         android:id="@+id/historyFragment"
@@ -76,4 +83,9 @@
         android:name="com.example.pushpull.ExerciseDetailsFragment"
         android:label="Szczegóły ćwiczenia"
         tools:layout="@layout/fragment_exercise_details" />
+    <fragment
+        android:id="@+id/trainingFragment"
+        android:name="com.example.pushpull.TrainingFragment"
+        android:label="Szczegóły treningu"
+        tools:layout="@layout/fragment_training" />
 </navigation>

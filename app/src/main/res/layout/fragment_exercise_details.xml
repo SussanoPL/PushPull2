@@ -14,55 +14,151 @@
         android:layout_height="match_parent"
         tools:context=".ExerciseDetailsFragment">
 
+
+
+        <!-- ImageView dla ikony związanej z nazwą -->
+        <ImageView
+            android:id="@+id/exerciseIconView"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginLeft="8dp"
+
+            app:srcCompat="@drawable/ic_name"
+            app:layout_constraintTop_toTopOf="@id/labelExerciseName"
+            app:layout_constraintBottom_toBottomOf="@id/labelExerciseName"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/labelExerciseName"/>
+        <!-- TextView dla "Nazwa:" -->
+        <TextView
+            android:id="@+id/labelExerciseName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nazwa:"
+            android:textSize="14sp"
+            android:padding="8dp"
+            app:layout_constraintStart_toEndOf="@id/exerciseIconView"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- TextView z nazwą ćwiczenia -->
         <TextView
             android:id="@+id/exerciseNameTextView"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@{viewModel.exerciseName}"
-            android:layout_marginTop="16dp"
             android:padding="8dp"
             android:textColor="#000"
             android:textSize="16sp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/labelExerciseName"
+            app:layout_constraintEnd_toEndOf="parent" />
 
+
+        <!-- ImageView dla ikony związanej z opisem -->
+        <ImageView
+            android:id="@+id/descriptionIconView"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginLeft="8dp"
+
+            app:srcCompat="@drawable/ic_description"
+            app:layout_constraintTop_toTopOf="@id/descriptionExerciseLabel"
+            app:layout_constraintBottom_toBottomOf="@id/descriptionExerciseLabel"
+            app:layout_constraintStart_toStartOf="parent" />
+        <!-- TextView dla "Opisu:" -->
+        <TextView
+            android:id="@+id/descriptionExerciseLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Opis:"
+            android:textSize="14sp"
+            android:padding="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toEndOf="@id/descriptionIconView"
+            app:layout_constraintTop_toBottomOf="@id/exerciseNameTextView"
+            app:layout_constraintBottom_toTopOf="@id/exerciseDescriptionTextView" />
+
+
+        <!-- TextView z opisem ćwiczenia -->
         <TextView
             android:id="@+id/exerciseDescriptionTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@{viewModel.description}"
-            android:layout_marginTop="16dp"
-            android:padding="8dp"
             android:textColor="#000"
             android:textSize="16sp"
-            app:layout_constraintTop_toBottomOf="@id/exerciseNameTextView"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:padding="8dp"
+            app:layout_constraintTop_toBottomOf="@id/descriptionExerciseLabel"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+
+        <!-- ImageView dla ikony związanej z miesniami -->
+        <ImageView
+            android:id="@+id/muscleGroupIconView"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginLeft="8dp"
+            app:srcCompat="@drawable/ic_muscles"
+            app:layout_constraintTop_toTopOf="@id/muscleGroupLabel"
+            app:layout_constraintBottom_toBottomOf="@id/muscleGroupLabel"
             app:layout_constraintStart_toStartOf="parent" />
+        <!-- TextView dla "Mięśni:" -->
+        <TextView
+            android:id="@+id/muscleGroupLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Grupa mięśni:"
+            android:textSize="14sp"
+            android:layout_marginTop="8dp"
+            android:padding="8dp"
+            app:layout_constraintStart_toEndOf="@id/muscleGroupIconView"
+            app:layout_constraintTop_toBottomOf="@id/exerciseDescriptionTextView"
+            app:layout_constraintBottom_toTopOf="@id/exerciseMuscleGroupTextView" />
 
         <TextView
             android:id="@+id/exerciseMuscleGroupTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@{viewModel.muscleGroup}"
-            android:layout_marginTop="16dp"
             android:padding="8dp"
             android:textColor="#000"
             android:textSize="16sp"
-            app:layout_constraintTop_toBottomOf="@id/exerciseDescriptionTextView"
+            app:layout_constraintTop_toBottomOf="@id/muscleGroupLabel"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <!-- ImageView dla ikony związanej ze sprzętem -->
+        <ImageView
+            android:id="@+id/equipmnetIconView"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginLeft="8dp"
+            app:srcCompat="@drawable/ic_equipmnet"
+            app:layout_constraintTop_toTopOf="@id/equipmentLabel"
+            app:layout_constraintBottom_toBottomOf="@id/equipmentLabel"
+            app:layout_constraintStart_toStartOf="parent" />
+        <!-- TextView dla "Mięśni:" -->
+        <TextView
+            android:id="@+id/equipmentLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sprzęt:"
+            android:textSize="14sp"
+            android:layout_marginTop="8dp"
+            android:padding="8dp"
+            app:layout_constraintStart_toEndOf="@id/equipmnetIconView"
+            app:layout_constraintTop_toBottomOf="@id/exerciseMuscleGroupTextView"
+            app:layout_constraintBottom_toTopOf="@id/exerciseEquipmentTextView" />
 
         <TextView
             android:id="@+id/exerciseEquipmentTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@{viewModel.equipment}"
-            android:layout_marginTop="16dp"
             android:padding="8dp"
             android:textColor="#000"
             android:textSize="16sp"
-            app:layout_constraintTop_toBottomOf="@id/exerciseMuscleGroupTextView"
+            app:layout_constraintTop_toBottomOf="@id/equipmentLabel"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>

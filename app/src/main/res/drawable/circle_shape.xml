@@ -2,4 +2,7 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <solid android:color="?attr/circleColor"/> <!-- Użycie atrybutu zamiast bezpośredniego koloru -->
     <corners android:radius="50dp"/> <!-- Okrągłe rogi tworzące koło -->
+    <size
+        android:width="40dp"
+        android:height="40dp"/> <!-- Stała wielkość kształtu -->
 </shape>

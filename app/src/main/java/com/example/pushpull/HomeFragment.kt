@@ -74,6 +74,12 @@ class HomeFragment : Fragment() {
             ).also {
                 it.bottomMargin = (12 * resources.displayMetrics.density).toInt() // Ustawianie marginesu dolnego
             }
+            background = ContextCompat.getDrawable(context, R.drawable.rounded_container_background) // Ustawianie tła z zaokrąglonymi rogami
+            // Ustaw padding dla kontenera, aby tekst nie dotykał bezpośrednio jego krawędzi
+            setPadding((16 * resources.displayMetrics.density).toInt(),
+                (16 * resources.displayMetrics.density).toInt(),
+                (16 * resources.displayMetrics.density).toInt(),
+                (16 * resources.displayMetrics.density).toInt())
         }
 
         // Tworzenie TextView dla dnia
@@ -113,6 +119,14 @@ class HomeFragment : Fragment() {
         // Dodawanie widoków do kontenera
         dayContainer.addView(circleDay)
         dayContainer.addView(workoutView)
+
+        // Dodaj OnClickListener do kontenera
+        dayContainer.setOnClickListener {
+            // Tu możesz przekazać argumenty do TrainingFragment, jeśli są potrzebne
+            // na przykład nazwę treningu lub jakiś identyfikator
+            val action = HomeFragmentDirections.actionHomeFragmentToTrainingFragment(workout)
+            navController.navigate(action)
+        }
 
         // Dodawanie kontenera do głównego kontenera LinearLayout w ScrollView
         binding.scheduleContainer.addView(dayContainer)
