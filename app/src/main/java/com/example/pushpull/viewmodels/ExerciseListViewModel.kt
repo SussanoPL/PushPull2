@@ -14,12 +14,13 @@ class ExerciseListViewModel : ViewModel() {
         val db = FirebaseFirestore.getInstance()
         db.collection("Exercises")
             .whereEqualTo("muscleGroup", muscleGroup)
-            .get()
-            .addOnSuccessListener { documents ->
-                val exercisesForGroup = documents.mapNotNull { document ->
-                    document.getString("name")
-                }.sorted()
+            .addSnapshotListener { querySnapshot, _ ->
+                val exercisesForGroup = querySnapshot?.documents
+                    ?.mapNotNull { it.getString("name") }
+                    ?.sorted() ?: emptyList()
                 _exercises.value = exercisesForGroup
             }
     }
+
+
 }

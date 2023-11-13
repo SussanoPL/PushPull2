@@ -30,9 +30,13 @@ class ExerciseDetailsViewModel: ViewModel() {
             db.collection("Exercises")
                 .whereEqualTo("name", exerciseName)
                 .limit(1)  // Assuming exercise names are unique
-                .get()
-                .addOnSuccessListener { querySnapshot ->
-                    val document = querySnapshot.documents.firstOrNull()
+                .addSnapshotListener { querySnapshot, firestoreException ->
+                    if (firestoreException != null) {
+                        _errorMessage.value = firestoreException.localizedMessage ?: "An error occurred while fetching data."
+                        return@addSnapshotListener
+                    }
+
+                    val document = querySnapshot?.documents?.firstOrNull()
                     if (document != null) {
                         _exerciseName.value = document.getString("name")
                         _description.value = document.getString("description")
@@ -42,11 +46,9 @@ class ExerciseDetailsViewModel: ViewModel() {
                         _errorMessage.value = "No exercise found with the given name."
                     }
                 }
-                .addOnFailureListener { exception ->
-                    _errorMessage.value = exception.localizedMessage ?: "An error occurred while fetching data."
-                }
         } else {
             _errorMessage.value = "Invalid exercise name."
         }
     }
+
 }

@@ -12,6 +12,7 @@ import com.example.pushpull.adapters.TipsAdapter
 import com.example.pushpull.databinding.FragmentTipsBinding
 import com.example.pushpull.viewmodels.TipsViewModel
 import com.google.firebase.firestore.FirebaseFirestore
+import java.sql.Timestamp
 
 
 class TipsFragment : Fragment() {
@@ -35,7 +36,6 @@ class TipsFragment : Fragment() {
         viewModel.tips.observe(viewLifecycleOwner, Observer { tipsList ->
             adapter.updateTips(tipsList)
         })
-
 
         return binding.root
     }

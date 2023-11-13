@@ -48,7 +48,7 @@ class HomeFragment : Fragment() {
 
         // Tutaj dodajemy harmonogram treningów
         addScheduleToUI("Pn", "Klatka i Triceps", R.color.circleColorMo)
-        addScheduleToUI("Wt", "Plecy i Biceps", R.color.circleColorWt)
+        addScheduleToUI("Wt", "Plecy, Brzuch i Biceps", R.color.circleColorWt)
         addScheduleToUI("Pt", "Nogi i Barki", R.color.circleColorPt)
 
 

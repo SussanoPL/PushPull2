@@ -16,10 +16,13 @@ class SearchViewModel:ViewModel() {
 
     fun fetchMuscleGroups() {
         db.collection("Exercises")
-            .get()
-            .addOnSuccessListener { documents ->
-                val muscleGroups = documents.mapNotNull { it.getString("muscleGroup") }.distinct()
-                _muscleGroups.value = muscleGroups
+            .addSnapshotListener { querySnapshot, _ ->
+                if (querySnapshot != null) {
+                    val muscleGroups = querySnapshot.documents
+                        .mapNotNull { it.getString("muscleGroup") }
+                        .distinct()
+                    _muscleGroups.value = muscleGroups
+                }
             }
     }
 
@@ -30,10 +33,12 @@ class SearchViewModel:ViewModel() {
             .orderBy("name")
             .startAt(capitalizedQuery)
             .endAt(capitalizedQuery + "\uf8ff")
-            .get()
-            .addOnSuccessListener { snapshot ->
-                val exerciseNames = snapshot.documents.map { it.getString("name") ?: "" }
-                searchResults.value = exerciseNames
+            .addSnapshotListener { querySnapshot, _ ->
+                if (querySnapshot != null) {
+                    val exerciseNames = querySnapshot.documents
+                        .map { it.getString("name") ?: "" }
+                    searchResults.value = exerciseNames
+                }
             }
     }
 

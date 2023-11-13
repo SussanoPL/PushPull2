@@ -7,17 +7,35 @@
             name="viewModel"
             type="com.example.pushpull.viewmodels.TrainingViewModel" />
     </data>
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         tools:context=".TrainingFragment">
 
-        <!-- TODO: Update blank fragment layout -->
         <TextView
-            android:id="@+id/trainingName"
+            android:id="@+id/trainingDescription"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="" />
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
-    </FrameLayout>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingTop="8dp"
+            android:paddingBottom="60dp"
+            >
+
+            <LinearLayout
+                android:id="@+id/exercisesContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
 </layout>
