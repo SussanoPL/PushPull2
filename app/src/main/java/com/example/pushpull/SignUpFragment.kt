@@ -12,6 +12,8 @@ import androidx.navigation.fragment.findNavController
 import com.example.pushpull.databinding.FragmentSignUpBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 
 
 class SignUpFragment : Fragment() {
@@ -53,22 +55,40 @@ class SignUpFragment : Fragment() {
                                     navController.navigate(R.id.action_signUpFragment_to_signInFragment)
                                 }
                             } else {
-                                // Here we handle the error for a badly formatted email address
-                                if (task.exception is FirebaseAuthInvalidCredentialsException &&
-                                    (task.exception as FirebaseAuthInvalidCredentialsException).errorCode == "ERROR_INVALID_EMAIL"
-                                ) {
-                                    Toast.makeText(
-                                        requireContext(),
-                                        "Podany adres e-mail jest nieprawidłowy.",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                } else {
-                                    // For other errors, we just show the exception message
-                                    Toast.makeText(
-                                        requireContext(),
-                                        task.exception?.localizedMessage ?: "Wystąpił błąd.",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
+                                when {
+                                    task.exception is FirebaseAuthWeakPasswordException -> {
+                                        Toast.makeText(
+                                            requireContext(),
+                                            "Hasło musi mieć co najmniej 6 znaków.",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+
+                                    task.exception is FirebaseAuthInvalidCredentialsException &&
+                                            (task.exception as FirebaseAuthInvalidCredentialsException).errorCode == "ERROR_INVALID_EMAIL" -> {
+                                        Toast.makeText(
+                                            requireContext(),
+                                            "Podany adres e-mail jest nieprawidłowy.",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+
+                                    task.exception is FirebaseAuthUserCollisionException -> {
+                                        Toast.makeText(
+                                            requireContext(),
+                                            "Konto z tym adresem e-mail już istnieje.",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+
+                                    else -> {
+                                        // For other errors, we just show the exception message
+                                        Toast.makeText(
+                                            requireContext(),
+                                            task.exception?.localizedMessage ?: "Wystąpił błąd.",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
                                 }
                             }
                         }

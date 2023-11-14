@@ -13,8 +13,11 @@ import com.example.pushpull.databinding.FragmentHomeBinding
 import com.example.pushpull.databinding.FragmentSearchBinding
 import com.example.pushpull.databinding.FragmentSignInBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
 
 
 class SignInFragment : Fragment() {
@@ -58,13 +61,20 @@ class SignInFragment : Fragment() {
                             bottomNavigationView?.selectedItemId = R.id.homeFragment
                         }
                     } else {
-                        // Display custom error message for badly formatted email
-                        if (task.exception is FirebaseAuthInvalidCredentialsException &&
-                            (task.exception as FirebaseAuthInvalidCredentialsException).errorCode == "ERROR_INVALID_EMAIL") {
-                            Toast.makeText(requireContext(), "Podany adres e-mail jest nieprawidłowy.", Toast.LENGTH_SHORT).show()
+                        // Handle reCAPTCHA and invalid email errors
+                        val exception = task.exception
+                        if (exception is FirebaseAuthInvalidCredentialsException) {
+                            if (exception.errorCode == "ERROR_INVALID_EMAIL") {
+                                Toast.makeText(requireContext(), "Podany adres e-mail jest nieprawidłowy.", Toast.LENGTH_SHORT).show()
+                            } else {
+                                Toast.makeText(requireContext(), "Błąd podczas logowania: Nieprawidłowe dane logowania.", Toast.LENGTH_SHORT).show()
+                            }
+                        } else if (exception is FirebaseAuthInvalidUserException) {
+                            Toast.makeText(requireContext(), "Konto nie istnieje lub zostało usunięte.", Toast.LENGTH_SHORT).show()
+                        } else if (exception is FirebaseTooManyRequestsException) {
+                            Toast.makeText(requireContext(), "Przekroczono limit prób logowania. Spróbuj ponownie później.", Toast.LENGTH_SHORT).show()
                         } else {
-                            // Display error message for other errors
-                            Toast.makeText(requireContext(), task.exception?.message, Toast.LENGTH_SHORT).show()
+                            Toast.makeText(requireContext(), "Błędny email lub hasło", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
@@ -78,10 +88,5 @@ class SignInFragment : Fragment() {
             navController.navigate(R.id.action_signInFragment_to_signUpFragment)
         }
 
-
-
-
     }
-
-
 }
