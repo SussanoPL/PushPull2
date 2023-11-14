@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/signUpFragment">
 
     <fragment
         android:id="@+id/homeFragment"
@@ -31,6 +31,15 @@
         android:name="com.example.pushpull.TipsFragment"
         android:label="Porady"
         tools:layout="@layout/fragment_tips" />
+    <fragment
+        android:id="@+id/userFragment"
+        android:name="com.example.pushpull.UserFragment"
+        android:label="Twoje Konto"
+        tools:layout="@layout/fragment_user" >
+        <action
+            android:id="@+id/action_userFragment_to_signUpFragment"
+            app:destination="@id/signUpFragment" />
+    </fragment>
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.example.pushpull.SearchFragment"
@@ -88,4 +97,24 @@
         android:name="com.example.pushpull.TrainingFragment"
         android:label="Szczegóły treningu"
         tools:layout="@layout/fragment_training" />
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="com.example.pushpull.SignUpFragment"
+        android:label="SignUpFragment" >
+        <action
+            android:id="@+id/action_signUpFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/signInFragment"
+        android:name="com.example.pushpull.SignInFragment"
+        android:label="SignInFragment" >
+        <action
+            android:id="@+id/action_signInFragment_to_signUpFragment"
+            app:destination="@id/signUpFragment" />
+        <action
+            android:id="@+id/action_signInFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+
 </navigation>
