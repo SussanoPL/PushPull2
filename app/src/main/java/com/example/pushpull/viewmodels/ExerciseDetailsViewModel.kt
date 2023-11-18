@@ -22,6 +22,9 @@ class ExerciseDetailsViewModel: ViewModel() {
     private val _muscleGroup = MutableLiveData<String>()
     val muscleGroup: LiveData<String> get() = _muscleGroup
 
+    private val _userId = MutableLiveData<String>()
+    val userId: LiveData<String> get() = _userId
+
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> get() = _errorMessage
 
@@ -29,10 +32,11 @@ class ExerciseDetailsViewModel: ViewModel() {
         if (exerciseName.isNotEmpty()) {
             db.collection("Exercises")
                 .whereEqualTo("name", exerciseName)
-                .limit(1)  // Assuming exercise names are unique
+                .limit(1) // Assuming exercise names are unique
                 .addSnapshotListener { querySnapshot, firestoreException ->
                     if (firestoreException != null) {
-                        _errorMessage.value = firestoreException.localizedMessage ?: "An error occurred while fetching data."
+                        _errorMessage.value = firestoreException.localizedMessage
+                            ?: "An error occurred while fetching data."
                         return@addSnapshotListener
                     }
 
@@ -42,6 +46,7 @@ class ExerciseDetailsViewModel: ViewModel() {
                         _description.value = document.getString("description")
                         _equipment.value = document.getString("equipment")
                         _muscleGroup.value = document.getString("muscleGroup")
+                        _userId.value = document.getString("userId") // Fetch and set the userId
                     } else {
                         _errorMessage.value = "No exercise found with the given name."
                     }

@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.example.pushpull.databinding.FragmentSignUpBinding
@@ -27,17 +28,46 @@ class UserFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+        // Assuming the user is already logged in and their email is verified
+        val user = FirebaseAuth.getInstance().currentUser
+        user?.let {
+            // Update the TextView with the user's email
+            binding.textViewAboveButton.text = getString(R.string.email_format, it.email)
+        }
+
+        binding.buttonChangePassword.setOnClickListener {
+            user?.email?.let { email ->
+                sendPasswordResetEmail(email)
+            }
+        }
+
         binding.buttonLogout.setOnClickListener {
             // Wylogowanie użytkownika
             FirebaseAuth.getInstance().signOut()
+            navigateToSignIn()
 
-            // Nawigacja do SignInFragment z wyczyszczeniem stosu nawigacyjnego
-            val navOptions = NavOptions.Builder()
-                .setPopUpTo(R.id.nav_graph, true) // Wyczyść cały stos nawigacyjny
-                .build()
-            findNavController().navigate(R.id.signInFragment, null, navOptions)
         }
     }
 
+    private fun sendPasswordResetEmail(email: String) {
+        FirebaseAuth.getInstance().sendPasswordResetEmail(email)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    // Notify the user to check their email
+                    Toast.makeText(context, "Mail ze zmianą hasła wysłany.", Toast.LENGTH_LONG).show()
+                } else {
+                    // Notify the user that there was an error
+                    Toast.makeText(context, "Błąd z wysłaniem maila zmiany hasła.", Toast.LENGTH_LONG).show()
+                }
+            }
+    }
+
+    private fun navigateToSignIn() {
+        val navOptions = NavOptions.Builder()
+            .setPopUpTo(R.id.nav_graph, true)
+            .build()
+        findNavController().navigate(R.id.signInFragment, null, navOptions)
+    }
 
 }

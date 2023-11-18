@@ -4,4 +4,5 @@
     <color name="circleColorWt">#FFD700</color>
     <color name="circleColorPt">#2ECC71</color>
     <color name="circleDefColor">#FF3421</color>
+    <color name="black">#000000</color>
 </resources>

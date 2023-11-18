@@ -85,6 +85,9 @@
         <argument
             android:name="name"
             app:argType="string" />
+            <argument
+                android:name="docId"
+                app:argType="string" />
         </action>
     </fragment>
     <fragment

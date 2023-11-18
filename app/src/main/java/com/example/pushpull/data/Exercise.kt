@@ -1,10 +1,13 @@
 package com.example.pushpull.data
 
-data class FirebaseExercise(
-    val id: String = "",
+data class Exercise(
     val name: String = "",
     val muscleGroup: String? = null,
     val equipment: String? = null,
-    val description: String? = null
+    val description: String? = null,
+    val userId: String? = null,
+    var docId: String = ""
+
+
 
 )

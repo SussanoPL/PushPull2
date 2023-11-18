@@ -84,9 +84,41 @@ class SignInFragment : Fragment() {
             }
         }
 
+        binding.textViewForgotPassword.setOnClickListener {
+            val email = binding.emailEt.text.toString().trim()
+
+            if (email.isNotEmpty()) {
+                firebaseAuth.sendPasswordResetEmail(email).addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Toast.makeText(
+                            requireContext(),
+                            "Mail do resetowania hasła został wysłany.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            "Wystąpił błąd podczas wysyłania maila do resetowania hasła.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    "Proszę wpisać adres e-mail.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+
+
+
         binding.textViewSignUp.setOnClickListener {
             navController.navigate(R.id.action_signInFragment_to_signUpFragment)
         }
 
     }
+
+
 }
