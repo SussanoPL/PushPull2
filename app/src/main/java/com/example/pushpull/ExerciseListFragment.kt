@@ -157,8 +157,8 @@ class ExerciseListFragment : Fragment() {
             .create()
 
         // Show the dialog and capture the positive button here to override the onClick
-        dialog.show()
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+            dialog.show()
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
             val name = dialogBinding.editTextExerciseName.text.toString().trim()
             val muscleGroupPosition = dialogBinding.spinnerMuscleGroup.selectedItemPosition
             val muscleGroup = if (muscleGroupPosition > 0) muscleGroups[muscleGroupPosition] else "" // Skip the prompt

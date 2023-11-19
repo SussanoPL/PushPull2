@@ -95,8 +95,8 @@ class ExerciseDetailsFragment : Fragment() {
         // Create and show the dialog
         val dialog = AlertDialog.Builder(requireContext())
             .setView(dialogBinding.root)
-            .setPositiveButton("Update", null)
-            .setNegativeButton("Cancel", null)
+            .setPositiveButton("Edytuj", null)
+            .setNegativeButton("Anuluj", null)
             .create()
 
         dialog.show()
@@ -124,7 +124,7 @@ class ExerciseDetailsFragment : Fragment() {
             db.collection("Exercises").document(docId)
                 .set(exercise)
                 .addOnSuccessListener {
-                    Toast.makeText(context, "Ćwiczenie zostało zaktuwalizowane!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Ćwiczenie zostało zaktualizowane!", Toast.LENGTH_SHORT).show()
                     viewModel.fetchExerciseDetailsByName(exercise.name)  // Refresh the details
                 }
                 .addOnFailureListener { e ->
