@@ -45,6 +45,10 @@
         android:name="com.example.pushpull.SearchFragment"
         android:label="Baza danych ćwiczeń"
         tools:layout="@layout/fragment_search" >
+        <argument
+            android:name="comingFromTrainingFragment"
+            app:argType="boolean"
+            android:defaultValue="false" />
         <action
             android:id="@+id/action_searchFragment_to_homeFragment"
             app:destination="@id/homeFragment"
@@ -73,6 +77,11 @@
         android:name="com.example.pushpull.ExerciseListFragment"
         android:label="Lista dostępnych ćwiczeń"
         tools:layout="@layout/fragment_exercise_list" >
+        <argument
+            android:name="comingFromTrainingFragment"
+            app:argType="boolean"
+            android:defaultValue="false" />
+
         <action
             android:id="@+id/action_exerciseListFragment_to_searchFragment"
             app:destination="@id/searchFragment"
@@ -88,6 +97,7 @@
             <argument
                 android:name="docId"
                 app:argType="string" />
+
         </action>
     </fragment>
     <fragment
@@ -99,7 +109,11 @@
         android:id="@+id/trainingFragment"
         android:name="com.example.pushpull.TrainingFragment"
         android:label="Szczegóły treningu"
-        tools:layout="@layout/fragment_training" />
+        tools:layout="@layout/fragment_training" >
+        <action
+            android:id="@+id/action_trainingFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
+    </fragment>
     <fragment
         android:id="@+id/signUpFragment"
         android:name="com.example.pushpull.SignUpFragment"

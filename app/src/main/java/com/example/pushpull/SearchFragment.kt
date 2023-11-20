@@ -20,6 +20,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -174,10 +176,22 @@ class SearchFragment() : Fragment() {
 
         container.setOnClickListener {
             navController = findNavController()
-            val action = SearchFragmentDirections.actionSearchFragmentToExerciseListFragment(muscleGroup)
+
+            // Retrieve the value of comingFromTrainingFragment
+            val comingFromTrainingFragment = arguments?.getBoolean("comingFromTrainingFragment") ?: false
+
+            // Create the action with the required arguments
+            val action = SearchFragmentDirections.actionSearchFragmentToExerciseListFragment(muscleGroup, comingFromTrainingFragment)
+
+            // Navigate with the action
             navController.navigate(action)
         }
+
     }
+
+
+
+
 
 
 

@@ -14,7 +14,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -65,6 +67,8 @@ class ExerciseListFragment : Fragment() {
             showDialogToAddExercise()
         }
 
+
+
     }
 
     private fun updateUIWithExercises(exercises: List<Exercise>) {
@@ -98,12 +102,22 @@ class ExerciseListFragment : Fragment() {
             }
             exerciseLayout.addView(textView)
 
-            // Set click listener for the entire layout
             exerciseLayout.setOnClickListener {
-                val navController = findNavController()
-                val action = ExerciseListFragmentDirections.actionExerciseListFragmentToExerciseDetailsFragment(exercise.name, exercise.docId)
-                navController.navigate(action)
+                val comingFromTrainingFragment = arguments?.getBoolean("comingFromTrainingFragment") ?: false
+
+                if (comingFromTrainingFragment) {
+                    // If the user is selecting an exercise for their workout, return the selected exercise name
+                    setFragmentResult("exerciseSelected", bundleOf("exerciseName" to exercise.name))
+                    // Pop back to the TrainingFragment specifically
+                    findNavController().popBackStack(R.id.trainingFragment, false)
+                } else {
+                    // If the user is just viewing exercise details, navigate to ExerciseDetailsFragment
+                    val action = ExerciseListFragmentDirections.actionExerciseListFragmentToExerciseDetailsFragment(exercise.name, exercise.docId)
+                    findNavController().navigate(action)
+                }
             }
+
+
 
             // Add a delete button if the exercise belongs to the logged-in user
             if (exercise.userId == currentUserId) {
@@ -217,6 +231,8 @@ class ExerciseListFragment : Fragment() {
         // Fetch exercises for this muscle group and update LiveData
         viewModel.fetchExercisesForMuscleGroup(muscleGroup)
     }
+
+
 
 
 
