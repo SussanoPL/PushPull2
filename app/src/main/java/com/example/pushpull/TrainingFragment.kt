@@ -1,12 +1,14 @@
 package com.example.pushpull
 
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Log
 import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -19,12 +21,17 @@ import androidx.navigation.fragment.findNavController
 import com.example.pushpull.databinding.DialogEditExerciseBinding
 import com.example.pushpull.databinding.FragmentTrainingBinding
 import com.example.pushpull.viewmodels.TrainingViewModel
+import com.google.firebase.auth.FirebaseAuth
 
 
 class TrainingFragment : Fragment() {
     private lateinit var binding: FragmentTrainingBinding
     private val viewModel: TrainingViewModel by viewModels()
     private var workoutId: String? = null
+    private var countDownTimer: CountDownTimer? = null
+    private var isTimerRunning = false
+
+
 
 
 
@@ -59,12 +66,44 @@ class TrainingFragment : Fragment() {
             if (workoutId != null && viewModel.ownWorkout.value == true) {
                 showEditOptions(workoutId)
             } else {
-                Toast.makeText(context, "You can only edit your own workouts.", Toast.LENGTH_SHORT)
+                Toast.makeText(context, "Możesz tylko edytować własne ćwiczenia.", Toast.LENGTH_SHORT)
                     .show()
             }
         }
 
-        // Listen for results from the ExerciseListFragment
+        binding.editNotesImageView.setOnClickListener {
+            viewModel.notes.value?.let { currentNotes ->
+                showEditNotesDialog(currentNotes)
+            }
+        }
+
+        //TIMER
+
+        binding.fabStart.setOnClickListener {
+            if (isTimerRunning) {
+                // Timer is currently running, so stop the timer
+                countDownTimer?.cancel()
+                isTimerRunning = false
+                binding.fabStart.setImageResource(R.drawable.ic_play) // Change icon to 'play'
+                // Perform any additional actions when stopping the timer, e.g., save time, update UI
+            } else {
+                // Timer is not running, so start the timer
+                isTimerRunning = true
+                binding.fabStart.setImageResource(R.drawable.ic_stop) // Change icon to 'stop'
+                // Here, start a new timer or continue from where it was stopped based on your needs
+                countDownTimer = object : CountDownTimer(Long.MAX_VALUE, 1000) { // Long.MAX_VALUE acts as an "indefinite" timer
+                    override fun onTick(millisUntilFinished: Long) {
+                        // Update the UI every tick with the elapsed time
+                        // You might want to store the elapsed time in a variable
+                    }
+
+                    override fun onFinish() {
+                        // This is not expected to be called in an "indefinite" timer scenario
+                    }
+                }.start()
+            }
+        }
+
         setFragmentResultListener("exerciseSelected") { _, bundle ->
             val selectedExerciseName = bundle.getString("exerciseName")
             // Update the ViewModel with the selected exercise name
@@ -78,7 +117,11 @@ class TrainingFragment : Fragment() {
         }
     }
 
+
+
     private fun setupObservers() {
+        var canEditExercises: Boolean = false
+
 
         viewModel.workoutId.observe(viewLifecycleOwner) { id ->
             workoutId = id
@@ -90,8 +133,18 @@ class TrainingFragment : Fragment() {
 
 
         viewModel.ownWorkout.observe(viewLifecycleOwner) { ownsWorkout ->
-            // Enable or disable the FAB based on the ownership status
+            // Update the edit permission based on the ownership status
+            canEditExercises = ownsWorkout
+
+            // Update the visibility of the floating action button
             binding.fabEditWorkout.visibility = if (ownsWorkout) View.VISIBLE else View.GONE
+            binding.editNotesImageView.visibility = if (ownsWorkout) View.VISIBLE else View.GONE
+
+
+            // Now call updateExerciseDetails with the new value of canEditExercises
+            viewModel.exerciseData.value?.let { exerciseData ->
+                updateExerciseDetails(exerciseData, canEditExercises)
+            }
         }
 
         viewModel.notes.observe(viewLifecycleOwner) { notes ->
@@ -103,7 +156,8 @@ class TrainingFragment : Fragment() {
         }
 
         viewModel.exerciseData.observe(viewLifecycleOwner) { exerciseData ->
-            updateExerciseDetails(exerciseData)
+            // Pass the current edit permission status to updateExerciseDetails
+            updateExerciseDetails(exerciseData, canEditExercises)
         }
     }
 
@@ -119,9 +173,10 @@ class TrainingFragment : Fragment() {
 
     // Function to update the exercise details
 
-    private fun updateExerciseDetails(exerciseDetails: List<TrainingViewModel.ExerciseData>) {
+    private fun updateExerciseDetails(exerciseDetails: List<TrainingViewModel.ExerciseData>, canEdit: Boolean) {
         // We assume that the details include the name, so we clear the container first.
         binding.exercisesContainer.removeAllViews()
+
 
 
         exerciseDetails.forEach { detail ->
@@ -165,56 +220,57 @@ class TrainingFragment : Fragment() {
 
             // Add the exerciseLayout to the exerciseContainer
             exerciseContainer.addView(exerciseLayout)
-
-            // Create and add the edit button to the exerciseContainer
-            val editButton = ImageButton(context).apply {
-                setImageResource(R.drawable.ic_edit) // Use your edit icon resource
-                background = null
-                layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-                ).also {
-                    // Set top margin here
-                    it.topMargin = dpToPx(12) // Replace 8 with the actual dp value you want for the top margin
-                }
-                setOnClickListener {
-                    // Show the edit dialog with the current exercise data
-                    showEditDialog(detail)
-                }
-            }
-            exerciseContainer.addView(editButton)
-
-
-            val deleteButton = ImageButton(context).apply {
-                setImageResource(R.drawable.ic_delete) // Use your delete icon resource
-                background = null
-                layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-                ).also {
-                    // Set top margin here
-                    it.topMargin = dpToPx(12) // Replace 8 with the actual dp value you want for the top margin
-                }
-                setOnClickListener {
-                    workoutId?.let { nonNullWorkoutId ->
-                        val exerciseToRemove = mapOf(
-                            "exerciseId" to detail.id as Any,
-                            "repetitions" to detail.repetitions as Any,
-                            "sets" to detail.sets as Any,
-                            "weight" to detail.weight as Any
-                        )
-                        viewModel.deleteExerciseFromWorkout(nonNullWorkoutId, exerciseToRemove)
-                        // Directly remove the view for this exercise
-                        removeExerciseView(exerciseContainer)
-                    } ?: run {
-                        Toast.makeText(context, "Error: Workout ID is null.", Toast.LENGTH_SHORT).show()
-                        Log.e("TrainingFragment", "workoutId is null and cannot proceed with deletion.")
+            if (canEdit) {
+                // Create and add the edit button only if the userId matches
+                val editButton = ImageButton(context).apply {
+                    setImageResource(R.drawable.ic_edit) // Use your edit icon resource
+                    background = null
+                    layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    ).also {
+                        // Set top margin here
+                        it.topMargin = dpToPx(12)
+                    }
+                    setOnClickListener {
+                        // Show the edit dialog with the current exercise data
+                        showEditDialog(detail)
                     }
                 }
-            }
+                exerciseContainer.addView(editButton)
 
-            // Add the delete button to the exerciseContainer
-            exerciseContainer.addView(deleteButton)
+                // Create and add the delete button only if the userId matches
+                val deleteButton = ImageButton(context).apply {
+                    setImageResource(R.drawable.ic_delete) // Use your delete icon resource
+                    background = null
+                    layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    ).also {
+                        // Set top margin here
+                        it.topMargin = dpToPx(12)
+                    }
+                    setOnClickListener {
+                        workoutId?.let { nonNullWorkoutId ->
+                            val exerciseToRemove = mapOf(
+                                "exerciseId" to detail.id as Any,
+                                "repetitions" to detail.repetitions as Any,
+                                "sets" to detail.sets as Any,
+                                "weight" to detail.weight as Any
+                            )
+                            viewModel.deleteExerciseFromWorkout(nonNullWorkoutId, exerciseToRemove)
+                            // Directly remove the view for this exercise
+                            removeExerciseView(exerciseContainer)
+                        } ?: run {
+                            Toast.makeText(context, "Error: Workout ID is null.", Toast.LENGTH_SHORT).show()
+                            Log.e("TrainingFragment", "workoutId is null and cannot proceed with deletion.")
+                        }
+                    }
+                }
+
+                // Add the delete button to the exerciseContainer
+                exerciseContainer.addView(deleteButton)
+            }
 
             // Finally, add the exerciseContainer to the exercisesContainer
             binding.exercisesContainer.addView(exerciseContainer)
@@ -272,7 +328,7 @@ class TrainingFragment : Fragment() {
                 if (pickedExerciseName.isNotEmpty()) {
                     viewModel.addNewExerciseToWorkout(workoutId, pickedExerciseName, repetitions, sets, weight)
                 } else {
-                    Toast.makeText(context, "Please pick an exercise first.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Wybierz najpierw ćwiczenie.", Toast.LENGTH_SHORT).show()
                 }
             }
             .setNegativeButton("Anuluj", null)
@@ -300,7 +356,7 @@ class TrainingFragment : Fragment() {
         // Show the dialog
         val dialog = AlertDialog.Builder(requireContext())
             .setView(dialogBinding.root)
-            .setPositiveButton("Update") { _, _ ->
+            .setPositiveButton("Edytuj") { _, _ ->
                 // Collect data from dialog and update exercise in ViewModel
                 val updatedRepetitions = dialogBinding.editTextRepetitions.text.toString().toIntOrNull() ?: 0
                 val updatedSets = dialogBinding.editTextSets.text.toString().toIntOrNull() ?: 0
@@ -319,7 +375,7 @@ class TrainingFragment : Fragment() {
                     viewModel.updateExerciseInWorkout(id, updatedExerciseData)
                 }
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton("Anuluj", null)
             .create()
 
         dialog.show()
@@ -327,6 +383,33 @@ class TrainingFragment : Fragment() {
 
     private fun removeExerciseView(exerciseContainer: LinearLayout) {
         binding.exercisesContainer.removeView(exerciseContainer)
+    }
+
+    private fun showEditNotesDialog(currentNotes: String) {
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_edit_notes, null)
+        val editTextWorkoutNotes = dialogView.findViewById<EditText>(R.id.editTextWorkoutNotes)
+        editTextWorkoutNotes.setText(currentNotes)
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Edytuj opis treningu")
+            .setView(dialogView)
+            .setPositiveButton("Edytuj") { _, _ ->
+                val updatedNotes = editTextWorkoutNotes.text.toString()
+                saveNotesToFirebase(updatedNotes)
+            }
+            .setNegativeButton("Anuluj", null)
+            .show()
+    }
+
+    private fun saveNotesToFirebase(notes: String) {
+        workoutId?.let { id ->
+            viewModel.updateWorkoutNotes(id, notes)
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        countDownTimer?.cancel() // Cancel the timer
     }
 
 

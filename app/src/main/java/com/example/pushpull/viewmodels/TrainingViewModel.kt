@@ -134,6 +134,17 @@ class TrainingViewModel: ViewModel() {
         }
     }
 
+    fun updateWorkoutNotes(workoutId: String, notes: String) {
+        db.collection("Workouts").document(workoutId)
+            .update("notes", notes)
+            .addOnSuccessListener {
+                Log.d("TrainingViewModel", "Workout notes updated successfully")
+            }
+            .addOnFailureListener { e ->
+                Log.e("TrainingViewModel", "Error updating workout notes", e)
+            }
+    }
+
     fun addExerciseToWorkout(workoutId: String, exerciseData: TrainingViewModel.ExerciseData) {
         // First, find the exercise ID by the exercise name
         db.collection("Exercises")

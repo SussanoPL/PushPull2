@@ -19,12 +19,30 @@
         android:textSize="16dp"
         android:hint="Wybrane ćwiczenie" />
 
+    <TextView
+        android:id="@+id/textViewExReps"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:textSize="16dp"
+        android:layout_marginTop="5dp"
+        android:text="Ilość powtórzeń" />
+
     <EditText
         android:id="@+id/editTextRepetitions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Powtórzenia"
+        android:hint="Powtórzenia:"
         android:inputType="number" />
+
+    <TextView
+        android:id="@+id/textViewExSets"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:textSize="16dp"
+        android:layout_marginTop="5dp"
+        android:text="Ilość serii:" />
 
     <EditText
         android:id="@+id/editTextSets"
@@ -32,6 +50,15 @@
         android:layout_height="wrap_content"
         android:hint="Serie"
         android:inputType="number" />
+
+    <TextView
+        android:id="@+id/textViewExWeight"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:textSize="16dp"
+        android:layout_marginTop="5dp"
+        android:text="Ciężar:" />
 
     <EditText
         android:id="@+id/editTextWeight"
