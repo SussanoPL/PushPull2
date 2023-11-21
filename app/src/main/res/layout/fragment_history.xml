@@ -16,7 +16,8 @@
     <!-- ScrollView to allow scrolling through history entries -->
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginBottom="60dp">
 
         <!-- LinearLayout as a container for dynamic history views -->
         <LinearLayout
