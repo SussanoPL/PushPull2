@@ -283,6 +283,49 @@ class TrainingViewModel: ViewModel() {
         _selectedExerciseName.value = name
     }
 
+    fun saveWorkoutToHistory(workoutId: String, startTime: Long) {
+        db.collection("Workouts").document(workoutId).get()
+            .addOnSuccessListener { workoutDocument ->
+                if (workoutDocument.exists()) {
+                    val workoutData = workoutDocument.data
+
+                    // Calculate the training time
+                    val trainingTime = System.currentTimeMillis() - startTime // This is in milliseconds
+
+                    // Get the current date
+                    val currentDate = FieldValue.serverTimestamp() // This will use the server's time
+
+                    // Get the userId from Firebase Authentication
+                    val userId = FirebaseAuth.getInstance().currentUser?.uid ?: "null"
+
+                    // Prepare the data to be saved
+                    val historyData = workoutData?.toMutableMap().apply {
+                        this?.put("trainingTime", trainingTime) // Add the training time to the history data
+                        this?.put("date", currentDate) // Add the current date to the history data
+                        this?.put("userId", userId) // Add the userId to the history data
+                    }
+
+                    // Save the data to the "History" collection
+                    historyData?.let {
+                        db.collection("History").add(it)
+                            .addOnSuccessListener {
+                                Log.d("TrainingViewModel", "Workout saved successfully to History")
+                            }
+                            .addOnFailureListener { e ->
+                                Log.e("TrainingViewModel", "Error saving workout to History", e)
+                            }
+                    }
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("TrainingViewModel", "Error fetching workout document", e)
+            }
+    }
+
+
+
+
+
 
 
 

@@ -30,6 +30,14 @@ class TrainingFragment : Fragment() {
     private var workoutId: String? = null
     private var countDownTimer: CountDownTimer? = null
     private var isTimerRunning = false
+    private var startTime: Long = 0
+
+    private fun formatTime(millis: Long): String {
+        val seconds = (millis / 1000) % 60
+        val minutes = (millis / (1000 * 60)) % 60
+        val hours = (millis / (1000 * 60 * 60)) % 24
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds)
+    }
 
 
 
@@ -81,20 +89,25 @@ class TrainingFragment : Fragment() {
 
         binding.fabStart.setOnClickListener {
             if (isTimerRunning) {
-                // Timer is currently running, so stop the timer
+                // Stop the timer
                 countDownTimer?.cancel()
                 isTimerRunning = false
                 binding.fabStart.setImageResource(R.drawable.ic_play) // Change icon to 'play'
-                // Perform any additional actions when stopping the timer, e.g., save time, update UI
+
+                // Pass workoutId and startTime directly to the saveWorkoutToHistory function
+                val workoutId = this.workoutId // Assuming this.workoutId is the ID you have in your fragment
+                if (!workoutId.isNullOrEmpty()) {
+                    viewModel.saveWorkoutToHistory(workoutId, startTime)
+                }
             } else {
                 // Timer is not running, so start the timer
                 isTimerRunning = true
                 binding.fabStart.setImageResource(R.drawable.ic_stop) // Change icon to 'stop'
-                // Here, start a new timer or continue from where it was stopped based on your needs
+                startTime = System.currentTimeMillis()
                 countDownTimer = object : CountDownTimer(Long.MAX_VALUE, 1000) { // Long.MAX_VALUE acts as an "indefinite" timer
                     override fun onTick(millisUntilFinished: Long) {
-                        // Update the UI every tick with the elapsed time
-                        // You might want to store the elapsed time in a variable
+                        val elapsed = System.currentTimeMillis() - startTime
+                        binding.textViewTimer.text = formatTime(elapsed)
                     }
 
                     override fun onFinish() {
