@@ -1,18 +1,15 @@
-package com.example.pushpull
+package com.example.pushpull.fragments
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.example.pushpull.adapters.TipsAdapter
 import com.example.pushpull.databinding.FragmentTipsBinding
 import com.example.pushpull.viewmodels.TipsViewModel
-import com.google.firebase.firestore.FirebaseFirestore
-import java.sql.Timestamp
 
 
 class TipsFragment : Fragment() {
@@ -23,13 +20,13 @@ class TipsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentTipsBinding.inflate(inflater, container, false).apply {
             lifecycleOwner = viewLifecycleOwner
             viewModel = this@TipsFragment.viewModel
         }
 
-        val adapter = TipsAdapter(emptyList()) // Inicjalizuj adapter z pustą listą
+        val adapter = TipsAdapter(emptyList())
         binding.tipsRecyclerView.adapter = adapter
 
 

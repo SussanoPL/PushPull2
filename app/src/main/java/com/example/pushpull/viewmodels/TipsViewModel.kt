@@ -5,10 +5,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.example.pushpull.R
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.gson.Gson
 
 class TipsViewModel(application: Application) : AndroidViewModel(application) {
     private val _tips = MutableLiveData<List<String>>()
@@ -33,7 +30,7 @@ class TipsViewModel(application: Application) : AndroidViewModel(application) {
 
         docRef.addSnapshotListener { snapshot, e ->
             if (e != null) {
-                Log.w("TipsViewModel", "Listen failed.", e)
+                Log.w("TipsViewModel", "Błąd pobrania.", e)
                 return@addSnapshotListener
             }
 
@@ -47,7 +44,7 @@ class TipsViewModel(application: Application) : AndroidViewModel(application) {
                     }
                 }
             } else {
-                Log.d("TipsViewModel", "Current data: null")
+                Log.d("TipsViewModel", "Dane: null")
             }
         }
     }

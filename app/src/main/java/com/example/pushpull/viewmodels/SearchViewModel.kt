@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.example.pushpull.R
 import com.google.firebase.firestore.FirebaseFirestore
 
-class SearchViewModel:ViewModel() {
+class SearchViewModel : ViewModel() {
     private val db = FirebaseFirestore.getInstance()
 
     private val _muscleGroups = MutableLiveData<List<String>>()

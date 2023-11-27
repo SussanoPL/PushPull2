@@ -1,14 +1,12 @@
-package com.example.pushpull
+package com.example.pushpull.fragments
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-
 import android.view.Gravity
 import android.view.KeyEvent
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,32 +15,28 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
-import androidx.core.os.bundleOf
-import androidx.fragment.app.setFragmentResult
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import com.example.pushpull.R
 import com.example.pushpull.databinding.FragmentSearchBinding
 import com.example.pushpull.viewmodels.SearchViewModel
 
 
-class SearchFragment() : Fragment() {
+class SearchFragment : Fragment() {
     private lateinit var binding: FragmentSearchBinding
     private lateinit var navController: NavController
     private val viewModel: SearchViewModel by viewModels()
 
 
 
-
-
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentSearchBinding.inflate(inflater, container, false).apply {
             lifecycleOwner = viewLifecycleOwner
             viewModel = this@SearchFragment.viewModel
@@ -51,7 +45,8 @@ class SearchFragment() : Fragment() {
         binding.exSearch.setOnKeyListener { v, keyCode, event ->
             if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                 v.clearFocus()
-                val imm: InputMethodManager = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                val imm: InputMethodManager =
+                    context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(v.windowToken, 0)
                 true
             } else {
@@ -111,8 +106,12 @@ class SearchFragment() : Fragment() {
                 textView.isFocusable = true
                 textView.setOnClickListener {
                     val navController = findNavController()
-                    val action = SearchFragmentDirections.actionSearchFragmentToExerciseDetailsFragment(exerciseName)
-                    navController.navigate(action)                }
+                    val action =
+                        SearchFragmentDirections.actionSearchFragmentToExerciseDetailsFragment(
+                            exerciseName
+                        )
+                    navController.navigate(action)
+                }
                 binding.suggestionsContainer.addView(textView)
             }
         }
@@ -120,8 +119,6 @@ class SearchFragment() : Fragment() {
 
         return binding.root
     }
-
-
 
 
     @SuppressLint("ResourceType")
@@ -132,14 +129,15 @@ class SearchFragment() : Fragment() {
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
-        containerParams.bottomMargin = (8 * resources.displayMetrics.density).toInt() // Dodaj margines do dolnej części, np. 16dp
+        containerParams.bottomMargin = (8 * resources.displayMetrics.density).toInt()
         container.layoutParams = containerParams
-        container.gravity = Gravity.CENTER_VERTICAL // Dodane wyrównanie
+        container.gravity = Gravity.CENTER_VERTICAL
 
-        container.setBackgroundResource(R.drawable.card_background) // Ustaw tło kontenera na card_background.xml
+        container.setBackgroundResource(R.drawable.card_background)
 
 
-        val cardView = LayoutInflater.from(context).inflate(R.drawable.rounded_image, container, false) as CardView
+        val cardView = LayoutInflater.from(context)
+            .inflate(R.drawable.rounded_image, container, false) as CardView
         val imageViewInsideCard = cardView.findViewById<ImageView>(R.id.imageInsideCard)
 
         val imageResId = viewModel.muscleImageMap[muscleGroup]
@@ -177,23 +175,18 @@ class SearchFragment() : Fragment() {
         container.setOnClickListener {
             navController = findNavController()
 
-            // Retrieve the value of comingFromTrainingFragment
-            val comingFromTrainingFragment = arguments?.getBoolean("comingFromTrainingFragment") ?: false
+            val comingFromTrainingFragment =
+                arguments?.getBoolean("comingFromTrainingFragment") ?: false
 
-            // Create the action with the required arguments
-            val action = SearchFragmentDirections.actionSearchFragmentToExerciseListFragment(muscleGroup, comingFromTrainingFragment)
+            val action = SearchFragmentDirections.actionSearchFragmentToExerciseListFragment(
+                muscleGroup,
+                comingFromTrainingFragment
+            )
 
-            // Navigate with the action
             navController.navigate(action)
         }
 
     }
-
-
-
-
-
-
 
 
 }

@@ -1,20 +1,18 @@
-package com.example.pushpull
+package com.example.pushpull.fragments
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.pushpull.data.Exercise
 import com.example.pushpull.databinding.DialogAddExerciseBinding
 import com.example.pushpull.databinding.FragmentExerciseDetailsBinding
-import com.example.pushpull.databinding.FragmentExerciseListBinding
 import com.example.pushpull.viewmodels.ExerciseDetailsViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -26,30 +24,30 @@ class ExerciseDetailsFragment : Fragment() {
     private var docId: String = ""
 
 
-
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
-        ): View? {
-            binding = FragmentExerciseDetailsBinding.inflate(inflater, container, false).apply {
-                lifecycleOwner = viewLifecycleOwner
-                viewModel = this@ExerciseDetailsFragment.viewModel
-            }
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentExerciseDetailsBinding.inflate(inflater, container, false).apply {
+            lifecycleOwner = viewLifecycleOwner
+            viewModel = this@ExerciseDetailsFragment.viewModel
+        }
 
-            docId = arguments?.getString("docId") ?: ""
-            if (docId.isBlank()) {
-                Log.e("ExerciseDetailsFragment", "No docId passed to ExerciseDetailsFragment")
-            }
+        docId = arguments?.getString("docId") ?: ""
+        if (docId.isBlank()) {
+            Log.e("ExerciseDetailsFragment", "No docId passed to ExerciseDetailsFragment")
+        }
 
 
-            val exerciseName = arguments?.getString("name") ?: ""
-            viewModel.fetchExerciseDetailsByName(exerciseName) // przekazujemy wartość do ViewModel
+        val exerciseName = arguments?.getString("name") ?: ""
+        viewModel.fetchExerciseDetailsByName(exerciseName) // przekazujemy wartość do ViewModel
 
-            viewModel.userId.observe(viewLifecycleOwner) { userId ->
-                // Compare with the current logged-in user's ID
-                val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
-                binding.fabEditExercise.visibility = if (userId == currentUserId) View.VISIBLE else View.GONE
-            }
+        viewModel.userId.observe(viewLifecycleOwner) { userId ->
+            // Compare with the current logged-in user's ID
+            val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+            binding.fabEditExercise.visibility =
+                if (userId == currentUserId) View.VISIBLE else View.GONE
+        }
         return binding.root
     }
 
@@ -75,24 +73,35 @@ class ExerciseDetailsFragment : Fragment() {
     private fun showEditExerciseDialog(exercise: Exercise) {
         val dialogBinding = DialogAddExerciseBinding.inflate(layoutInflater)
 
-        // Initialize the spinner with the muscle groups
-        val muscleGroups = arrayOf("Barki", "Biceps", "Brzuch", "Klatka piersiowa", "Plecy", "Pośladki", "Triceps", "Uda", "Łydki") // Include a prompt as the first item
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, muscleGroups)
+        // Inicjalizacja spinnera mięśniami
+        val muscleGroups = arrayOf(
+            "Barki",
+            "Biceps",
+            "Brzuch",
+            "Klatka piersiowa",
+            "Plecy",
+            "Pośladki",
+            "Triceps",
+            "Uda",
+            "Łydki"
+        ) // Include a prompt as the first item
+        val adapter =
+            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, muscleGroups)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         dialogBinding.spinnerMuscleGroup.adapter = adapter
 
-        // Set the spinner to the current muscle group
+        // Ustaw sippner na obecną wartość mięśnia
         val muscleGroupPosition = muscleGroups.indexOf(exercise.muscleGroup)
         if (muscleGroupPosition != -1) {
             dialogBinding.spinnerMuscleGroup.setSelection(muscleGroupPosition)
         }
 
-        // Pre-fill other exercise details
+        // Wypełnij inne wartości
         dialogBinding.editTextExerciseName.setText(exercise.name)
         dialogBinding.editTextEquipment.setText(exercise.equipment)
         dialogBinding.editTextDescription.setText(exercise.description)
 
-        // Create and show the dialog
+
         val dialog = AlertDialog.Builder(requireContext())
             .setView(dialogBinding.root)
             .setPositiveButton("Edytuj", null)
@@ -111,7 +120,7 @@ class ExerciseDetailsFragment : Fragment() {
                 docId = exercise.docId  // Keep the document ID for updating
             )
 
-            // Update the exercise in Firestore
+
             updateExercise(updatedExercise)
             dialog.dismiss()
         }
@@ -124,11 +133,16 @@ class ExerciseDetailsFragment : Fragment() {
             db.collection("Exercises").document(docId)
                 .set(exercise)
                 .addOnSuccessListener {
-                    Toast.makeText(context, "Ćwiczenie zostało zaktualizowane!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Ćwiczenie zostało zaktualizowane!", Toast.LENGTH_SHORT)
+                        .show()
                     viewModel.fetchExerciseDetailsByName(exercise.name)  // Refresh the details
                 }
                 .addOnFailureListener { e ->
-                    Toast.makeText(context, "Nie udało się zaktualizować ćwiczenia!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        "Nie udało się zaktualizować ćwiczenia!",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
         }
     }

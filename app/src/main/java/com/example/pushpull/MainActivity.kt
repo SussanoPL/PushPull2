@@ -1,10 +1,8 @@
 package com.example.pushpull
 
-import android.content.ContentValues.TAG
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
@@ -31,19 +29,16 @@ class MainActivity : AppCompatActivity() {
         val navInflater = navController.navInflater
         val navGraph = navInflater.inflate(R.navigation.nav_graph)
 
-        // Set the start destination based on whether the user is logged in
+        // Destynacja startowa gdy użytkownik jest zalogowany
         navGraph.setStartDestination(
             if (firebaseAuth.currentUser != null) {
-                R.id.homeFragment // User is logged in
+                R.id.homeFragment // Użytkownik zalogowany
             } else {
-                R.id.signUpFragment // No user is logged in
+                R.id.signUpFragment // Użytkownik niezalogowany
             }
         )
 
-        navController.graph = navGraph // Set the new graph to the NavController
-
-
-
+        navController.graph = navGraph
 
 
         val bottomNavigation = findViewById<BottomNavigationView>(R.id.bottomNav)
@@ -78,6 +73,7 @@ class MainActivity : AppCompatActivity() {
                     popEverythingAndNavigateToHost()
                     true
                 }
+
                 else -> false
             }
         }
@@ -95,6 +91,7 @@ class MainActivity : AppCompatActivity() {
                     NavigationUI.onNavDestinationSelected(menuItem, navController)
                     true
                 }
+
                 else -> false
             }
         }
@@ -103,7 +100,8 @@ class MainActivity : AppCompatActivity() {
             if (destination.id == R.id.historyFragment
                 || destination.id == R.id.tipsFragment
                 || destination.id == R.id.homeFragment
-                || destination.id == R.id.userFragment) {
+                || destination.id == R.id.userFragment
+            ) {
                 supportActionBar?.setDisplayHomeAsUpEnabled(false)
             } else {
                 supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -111,22 +109,18 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-
-
-
-
     }
+
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
     private fun popEverythingAndNavigateToHost() {
         val builder = NavOptions.Builder()
-            .setPopUpTo(R.id.nav_graph, false)  // Używam `nav_graph` jako domyślnego ID dla całego grafu nawigacji. Zamień to na właściwe ID twojego grafu nawigacji, jeśli jest inne.
+            .setPopUpTo(R.id.nav_graph, false)
             .setLaunchSingleTop(true)
         navController.navigate(R.id.homeFragment, null, builder.build())
     }
-
 
 
 }

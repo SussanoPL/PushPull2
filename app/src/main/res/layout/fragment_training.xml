@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context=".TrainingFragment">
+        tools:context=".fragments.TrainingFragment">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -76,9 +76,21 @@
                 android:layout_height="wrap_content"
                 android:text="00:00:00"
                 android:textSize="18sp"
+                android:gravity="center"
                 android:layout_toEndOf="@id/fab_start"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="15dp" />
+                android:layout_marginBottom="60dp" />
+
+            <!-- Save Workout FloatingActionButton placed to the right of the timer TextView -->
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_save_workout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/textViewTimer"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="60dp"
+                android:src="@drawable/ic_save"
+                app:backgroundTint="@color/black"/>
 
             <!-- Edit Workout FloatingActionButton -->
             <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -93,6 +105,7 @@
                 app:backgroundTint="@color/black"/>
 
         </RelativeLayout>
+
 
 
 

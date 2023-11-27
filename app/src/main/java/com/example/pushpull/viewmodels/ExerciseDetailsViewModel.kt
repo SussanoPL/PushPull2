@@ -1,12 +1,11 @@
 package com.example.pushpull.viewmodels
 
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 
-class ExerciseDetailsViewModel: ViewModel() {
+class ExerciseDetailsViewModel : ViewModel() {
 
     private val db = FirebaseFirestore.getInstance()
 
@@ -36,7 +35,7 @@ class ExerciseDetailsViewModel: ViewModel() {
                 .addSnapshotListener { querySnapshot, firestoreException ->
                     if (firestoreException != null) {
                         _errorMessage.value = firestoreException.localizedMessage
-                            ?: "An error occurred while fetching data."
+                            ?: "Błąd podczas pobierania danych."
                         return@addSnapshotListener
                     }
 
@@ -48,11 +47,11 @@ class ExerciseDetailsViewModel: ViewModel() {
                         _muscleGroup.value = document.getString("muscleGroup")
                         _userId.value = document.getString("userId") // Fetch and set the userId
                     } else {
-                        _errorMessage.value = "No exercise found with the given name."
+                        _errorMessage.value = "Nie znaleziono ćwiczenia z tą nazwą."
                     }
                 }
         } else {
-            _errorMessage.value = "Invalid exercise name."
+            _errorMessage.value = "Zła nazwa ćwiczenia."
         }
     }
 

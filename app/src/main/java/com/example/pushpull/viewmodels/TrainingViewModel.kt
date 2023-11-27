@@ -10,10 +10,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 
 
-// Data class for Exercise Details.
-
-
-class TrainingViewModel: ViewModel() {
+class TrainingViewModel : ViewModel() {
     private val _notes = MutableLiveData<String>()
     val notes: LiveData<String> = _notes
     private val _exercises = MutableLiveData<List<String>>()
@@ -25,6 +22,7 @@ class TrainingViewModel: ViewModel() {
 
     private val _ownWorkout = MutableLiveData<Boolean>()
     val ownWorkout: LiveData<Boolean> get() = _ownWorkout
+
     // Add this declaration
     private val _workoutId = MutableLiveData<String>()
     val workoutId: LiveData<String> = _workoutId
@@ -34,7 +32,6 @@ class TrainingViewModel: ViewModel() {
 
 
     private val listeners = mutableListOf<ListenerRegistration>()
-    // Referencja do bazy danych Firestore
     private val db = FirebaseFirestore.getInstance()
 
     // Funkcja pobierająca dane treningu na podstawie nazwy
@@ -70,7 +67,6 @@ class TrainingViewModel: ViewModel() {
     }
 
     fun fetchWorkoutIdByName(workoutName: String) {
-        // Fetch the workout ID using the workout name
         db.collection("Workouts")
             .whereEqualTo("name", workoutName)
             .get()
@@ -101,11 +97,11 @@ class TrainingViewModel: ViewModel() {
                             return@addSnapshotListener
                         }
                         if (documentSnapshot != null && documentSnapshot.exists()) {
-                            val exerciseName = documentSnapshot.getString("name") ?: "Unknown exercise"
-                            // Here we use the document ID and the exercise name
-                            val exerciseDetails = ExerciseData(id, exerciseName, repetitions, sets, weight)
+                            val exerciseName =
+                                documentSnapshot.getString("name") ?: "Unknown exercise"
+                            val exerciseDetails =
+                                ExerciseData(id, exerciseName, repetitions, sets, weight)
                             exercisesWithIndex.add(Pair(exerciseDetails, index))
-                            // If all exercises have been fetched, update LiveData
                             if (exercisesWithIndex.size == exercisesList.size) {
                                 val sortedExercises = exercisesWithIndex.sortedBy { it.second }
                                     .map { it.first }
@@ -127,7 +123,6 @@ class TrainingViewModel: ViewModel() {
                     _ownWorkout.value = userId == workoutUserId
                 }
                 .addOnFailureListener {
-                    // Handle any errors here
                 }
         } ?: run {
             _ownWorkout.value = false
@@ -145,8 +140,7 @@ class TrainingViewModel: ViewModel() {
             }
     }
 
-    fun addExerciseToWorkout(workoutId: String, exerciseData: TrainingViewModel.ExerciseData) {
-        // First, find the exercise ID by the exercise name
+    fun addExerciseToWorkout(workoutId: String, exerciseData: ExerciseData) {
         db.collection("Exercises")
             .whereEqualTo("name", exerciseData.name)
             .limit(1) // Assuming exercise names are unique
@@ -156,7 +150,6 @@ class TrainingViewModel: ViewModel() {
                     val exerciseDocument = documents.documents[0]
                     val exerciseId = exerciseDocument.id
 
-                    // Now that we have the exercise ID, we can create the map to add to the workout
                     val exerciseMap = mapOf(
                         "exerciseId" to exerciseId,
                         "repetitions" to exerciseData.repetitions,
@@ -164,18 +157,15 @@ class TrainingViewModel: ViewModel() {
                         "weight" to exerciseData.weight
                     )
 
-                    // Then, update the workout document with this exercise
                     db.collection("Workouts").document(workoutId)
                         .update("exercises", FieldValue.arrayUnion(exerciseMap))
                         .addOnSuccessListener {
                             Log.d("TrainingViewModel", "Exercise added successfully to workout")
-                            // If needed, perform any additional actions like updating UI
                         }
                         .addOnFailureListener { e ->
                             Log.e("TrainingViewModel", "Error adding exercise to workout", e)
                         }
                 } else {
-                    // Handle the case where the exercise was not found by name
                     Log.e("TrainingViewModel", "No exercise found with that name")
                 }
             }
@@ -184,21 +174,28 @@ class TrainingViewModel: ViewModel() {
             }
     }
 
-    fun addNewExerciseToWorkout(workoutId: String, exerciseName: String, repetitions: Int, sets: Int, weight: Double) {
-        // Fetch the ID for the exerciseName from Firestore
+    fun addNewExerciseToWorkout(
+        workoutId: String,
+        exerciseName: String,
+        repetitions: Int,
+        sets: Int,
+        weight: Double
+    ) {
         db.collection("Exercises")
             .whereEqualTo("name", exerciseName)
             .get()
             .addOnSuccessListener { documents ->
                 if (documents.size() > 0) {
                     val exerciseId = documents.documents[0].id
-                    addExerciseToWorkout(workoutId, ExerciseData(
-                        id = exerciseId,
-                        name = exerciseName,
-                        repetitions = repetitions,
-                        sets = sets,
-                        weight = weight
-                    ))
+                    addExerciseToWorkout(
+                        workoutId, ExerciseData(
+                            id = exerciseId,
+                            name = exerciseName,
+                            repetitions = repetitions,
+                            sets = sets,
+                            weight = weight
+                        )
+                    )
                 } else {
                     Log.e("TrainingViewModel", "No exercise found with name: $exerciseName")
                 }
@@ -208,7 +205,6 @@ class TrainingViewModel: ViewModel() {
             }
     }
 
-    // Add a function to delete an exercise from the workout.
     fun deleteExerciseFromWorkout(workoutId: String, exercise: Map<String, Any>) {
         db.collection("Workouts").document(workoutId)
             .update("exercises", FieldValue.arrayRemove(exercise))
@@ -221,25 +217,23 @@ class TrainingViewModel: ViewModel() {
             }
     }
 
-    fun updateExerciseInWorkout(workoutId: String, exerciseData: TrainingViewModel.ExerciseData) {
-        // Assuming you have the exercise ID and the details are already correct.
+    fun updateExerciseInWorkout(workoutId: String, exerciseData: ExerciseData) {
         val updatedExerciseMap = mapOf(
-            "exerciseId" to exerciseData.id, // Use the actual exerciseId, assuming it's part of ExerciseData
+            "exerciseId" to exerciseData.id,
             "repetitions" to exerciseData.repetitions,
             "sets" to exerciseData.sets,
             "weight" to exerciseData.weight
         )
 
-        // Fetch the current workout to get the existing exercises
         db.collection("Workouts").document(workoutId).get()
             .addOnSuccessListener { workoutDocument ->
                 if (workoutDocument.exists()) {
-                    val exercises = workoutDocument.data?.get("exercises") as? List<Map<String, Any>> ?: listOf()
-                    // Find the exercise to be updated within the array
+                    val exercises =
+                        workoutDocument.data?.get("exercises") as? List<Map<String, Any>>
+                            ?: listOf()
                     val exerciseToUpdate = exercises.find { it["exerciseId"] == exerciseData.id }
 
                     if (exerciseToUpdate != null) {
-                        // Use FieldValue.arrayRemove to remove the old exercise map
                         db.collection("Workouts").document(workoutId)
                             .update("exercises", FieldValue.arrayRemove(exerciseToUpdate))
                             .addOnSuccessListener {
@@ -247,14 +241,25 @@ class TrainingViewModel: ViewModel() {
                                 db.collection("Workouts").document(workoutId)
                                     .update("exercises", FieldValue.arrayUnion(updatedExerciseMap))
                                     .addOnSuccessListener {
-                                        Log.d("TrainingViewModel", "Exercise updated successfully in workout")
+                                        Log.d(
+                                            "TrainingViewModel",
+                                            "Exercise updated successfully in workout"
+                                        )
                                     }
                                     .addOnFailureListener { e ->
-                                        Log.e("TrainingViewModel", "Error adding updated exercise to workout", e)
+                                        Log.e(
+                                            "TrainingViewModel",
+                                            "Error adding updated exercise to workout",
+                                            e
+                                        )
                                     }
                             }
                             .addOnFailureListener { e ->
-                                Log.e("TrainingViewModel", "Error removing old exercise from workout", e)
+                                Log.e(
+                                    "TrainingViewModel",
+                                    "Error removing old exercise from workout",
+                                    e
+                                )
                             }
                     } else {
                         Log.e("TrainingViewModel", "Exercise to update not found in workout")
@@ -269,10 +274,8 @@ class TrainingViewModel: ViewModel() {
     }
 
 
-
-
     data class ExerciseData(
-        val id: String?, // Can be null when creating a new exercise
+        val id: String?,
         val name: String,
         val repetitions: Int,
         val sets: Int,
@@ -289,23 +292,18 @@ class TrainingViewModel: ViewModel() {
                 if (workoutDocument.exists()) {
                     val workoutData = workoutDocument.data
 
-                    // Calculate the training time
-                    val trainingTime = System.currentTimeMillis() - startTime // This is in milliseconds
+                    val trainingTime = System.currentTimeMillis() - startTime
 
-                    // Get the current date
-                    val currentDate = FieldValue.serverTimestamp() // This will use the server's time
+                    val currentDate = FieldValue.serverTimestamp()
 
-                    // Get the userId from Firebase Authentication
                     val userId = FirebaseAuth.getInstance().currentUser?.uid ?: "null"
 
-                    // Prepare the data to be saved
                     val historyData = workoutData?.toMutableMap().apply {
-                        this?.put("trainingTime", trainingTime) // Add the training time to the history data
-                        this?.put("date", currentDate) // Add the current date to the history data
-                        this?.put("userId", userId) // Add the userId to the history data
+                        this?.put("trainingTime", trainingTime)
+                        this?.put("date", currentDate)
+                        this?.put("userId", userId)
                     }
 
-                    // Save the data to the "History" collection
                     historyData?.let {
                         db.collection("History").add(it)
                             .addOnSuccessListener {
@@ -321,12 +319,6 @@ class TrainingViewModel: ViewModel() {
                 Log.e("TrainingViewModel", "Error fetching workout document", e)
             }
     }
-
-
-
-
-
-
 
 
 }

@@ -1,18 +1,13 @@
-package com.example.pushpull
+package com.example.pushpull.fragments
 
-import android.content.DialogInterface
 import android.graphics.Color
-import android.graphics.PorterDuff
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.Gravity
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageButton
@@ -21,21 +16,15 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
-import androidx.navigation.ui.setupActionBarWithNavController
+import com.example.pushpull.R
 import com.example.pushpull.data.Workout
 import com.example.pushpull.databinding.FragmentHomeBinding
 import com.example.pushpull.viewmodels.HomeViewModel
-import com.example.pushpull.viewmodels.SearchViewModel
-import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QuerySnapshot
-import java.util.Random
 
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
@@ -45,15 +34,13 @@ class HomeFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         viewModel.fetchWorkouts()
 
 
         return binding.root
     }
-
-
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -65,7 +52,7 @@ class HomeFragment : Fragment() {
         viewModel.workouts.observe(viewLifecycleOwner) { workouts ->
             binding.scheduleContainer.removeAllViews()
             workouts.forEach { workout ->
-                addScheduleToUI(workout) // Pass the Workout object directly
+                addScheduleToUI(workout)
             }
         }
 
@@ -84,9 +71,7 @@ class HomeFragment : Fragment() {
         }
 
 
-
     }
-
 
 
     private fun addScheduleToUI(workout: Workout) {
@@ -123,7 +108,12 @@ class HomeFragment : Fragment() {
             setPadding(10, 10, 10, 10)
             setTextColor(Color.WHITE)
             background = ContextCompat.getDrawable(context, R.drawable.circle_shape)?.apply {
-                (this as GradientDrawable).setColor(ContextCompat.getColor(context, R.color.circleDefColor))
+                (this as GradientDrawable).setColor(
+                    ContextCompat.getColor(
+                        context,
+                        R.color.circleDefColor
+                    )
+                )
             }
         }
 
@@ -161,7 +151,8 @@ class HomeFragment : Fragment() {
         }
 
         dayContainer.setOnClickListener {
-            val action = HomeFragmentDirections.actionHomeFragmentToTrainingFragment(workout.name ?: "")
+            val action =
+                HomeFragmentDirections.actionHomeFragmentToTrainingFragment(workout.name ?: "")
             navController.navigate(action)
         }
 
@@ -169,14 +160,15 @@ class HomeFragment : Fragment() {
     }
 
 
-
     private fun showAddWorkoutDialog() {
-        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_add_workout, null)
+        val dialogView =
+            LayoutInflater.from(requireContext()).inflate(R.layout.dialog_add_workout, null)
         val workoutNameEditText = dialogView.findViewById<EditText>(R.id.editTextWorkoutName)
         val daySpinner = dialogView.findViewById<Spinner>(R.id.spinnerDay)
 
         val daysArray = arrayOf("Pn", "Wt", "Śr", "Cz", "Pt", "Sb", "Nd")
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, daysArray)
+        val adapter =
+            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, daysArray)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         daySpinner.adapter = adapter
 
@@ -190,27 +182,19 @@ class HomeFragment : Fragment() {
                         val workout = Workout(
                             name = workoutName,
                             day = selectedDay,
-                            userId = viewModel.getCurrentUserId(), // You need to fetch the current user ID
-                            docId = docId)
+                            userId = viewModel.getCurrentUserId(),
+                            docId = docId
+                        )
                         addScheduleToUI(workout)
                     }
                 } else {
-                    Toast.makeText(requireContext(), "Wprowadź nazwę treningu.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Wprowadź nazwę treningu.", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
             .setNegativeButton("Anuluj", null)
             .show()
     }
-
-
-
-
-
-
-
-
-
-
 
 
 }

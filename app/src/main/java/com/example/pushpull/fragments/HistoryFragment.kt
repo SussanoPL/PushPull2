@@ -1,11 +1,11 @@
-package com.example.pushpull
+package com.example.pushpull.fragments
 
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,12 +13,11 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.databinding.adapters.ViewBindingAdapter.setPadding
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.example.pushpull.R
 import com.example.pushpull.data.History
 import com.example.pushpull.databinding.FragmentHistoryBinding
-import com.example.pushpull.databinding.FragmentHomeBinding
-import com.example.pushpull.databinding.FragmentTipsBinding
 import com.example.pushpull.viewmodels.HistoryViewModel
 import com.google.firebase.auth.FirebaseAuth
 import java.text.SimpleDateFormat
@@ -35,7 +34,6 @@ class HistoryFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
         binding = FragmentHistoryBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -53,14 +51,13 @@ class HistoryFragment : Fragment() {
     }
 
     private fun updateUIWithHistoryData(historyEntries: List<History>) {
+        Log.d("HistoryViewModel", "Updating UI with history entries count: ${historyEntries.size}")
+
         if (historyEntries.isEmpty()) {
-            // Show the empty history message
             binding.tvEmptyHistory.visibility = View.VISIBLE
         } else {
-            // Hide the empty history message
             binding.tvEmptyHistory.visibility = View.GONE
 
-            // Add new views for each history entry
             historyEntries.forEach { historyEntry ->
                 addHistoryToUI(historyEntry)
             }
@@ -70,22 +67,25 @@ class HistoryFragment : Fragment() {
     private fun addHistoryToUI(historyEntry: History) {
         val context = requireContext()
 
-        // Create views for day, name, date, and training time
+        // Widoki dla dnia, nazwy, daty czasu
         val dayCircle = createDayCircle(context, historyEntry.day ?: "N/A")
         val nameView = createNameView(context, historyEntry.name ?: "Brak nazwy")
-        val dateView = createTextView(context, formatDate(historyEntry.date), Gravity.CENTER_HORIZONTAL)
-        val trainingTimeView = createTextView(context, formatTrainingTime(historyEntry.trainingTime), Gravity.CENTER_HORIZONTAL)
+        val dateView =
+            createTextView(context, formatDate(historyEntry.date), Gravity.CENTER_HORIZONTAL)
+        val trainingTimeView = createTextView(
+            context,
+            formatTrainingTime(historyEntry.trainingTime),
+            Gravity.CENTER_HORIZONTAL
+        )
 
 
-        // Set layout parameters with top margin for the dayCircle
         val dayCircleParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         ).apply {
-            topMargin = (16 * resources.displayMetrics.density).toInt() // Set top margin here, for example 16dp
-            gravity = Gravity.CENTER_HORIZONTAL // If you want to center it horizontally
+            topMargin = (16 * resources.displayMetrics.density).toInt()
+            gravity = Gravity.CENTER_HORIZONTAL
         }
-        // Create a container for the day circle and the name.
         val entryContainer = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
             layoutParams = LinearLayout.LayoutParams(
@@ -103,13 +103,11 @@ class HistoryFragment : Fragment() {
             )
         }
 
-        // Add the date view above the day circle and name view.
         entryContainer.addView(dateView)
         entryContainer.addView(dayCircle, dayCircleParams)
         entryContainer.addView(nameView)
         entryContainer.addView(trainingTimeView)
 
-        // Finally, add the entry container to the parent layout.
         binding.historyContainer.addView(entryContainer)
     }
 
@@ -129,7 +127,12 @@ class HistoryFragment : Fragment() {
             setPadding(10, 10, 10, 10)
             setTextColor(Color.WHITE)
             background = ContextCompat.getDrawable(context, R.drawable.circle_shape)?.apply {
-                (this as GradientDrawable).setColor(ContextCompat.getColor(context, R.color.circleDefColor))
+                (this as GradientDrawable).setColor(
+                    ContextCompat.getColor(
+                        context,
+                        R.color.circleDefColor
+                    )
+                )
             }
         }
     }
@@ -149,19 +152,15 @@ class HistoryFragment : Fragment() {
 
     private fun createNameView(context: Context, nameText: String): TextView {
         return TextView(context).apply {
-            // Use LinearLayout.LayoutParams instead of FrameLayout.LayoutParams to center in LinearLayout
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             ).also {
-                // Set gravity to center horizontal if you want to center the text view within its container
                 it.gravity = Gravity.CENTER_HORIZONTAL
             }
             textSize = 24f
             text = nameText
-            // Set text alignment to center
             textAlignment = View.TEXT_ALIGNMENT_CENTER
-            // Set gravity to center vertical to center the text within the TextView
             gravity = Gravity.CENTER_VERTICAL
         }
     }

@@ -1,14 +1,13 @@
-package com.example.pushpull
+package com.example.pushpull.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.NavController
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.pushpull.R
 import com.example.pushpull.databinding.FragmentSignUpBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
@@ -24,8 +23,7 @@ class SignUpFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
+    ): View {
         binding = FragmentSignUpBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -33,7 +31,7 @@ class SignUpFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val navController = findNavController() // Initialize navController here
+        val navController = findNavController()
 
 
 
@@ -46,11 +44,11 @@ class SignUpFragment : Fragment() {
 
             if (email.isNotEmpty() && pass.isNotEmpty() && confirmPass.isNotEmpty()) {
                 if (pass == confirmPass) {
-                    // Create user with Firebase
+                    // Utworz uzytkownika w Firebase
                     firebaseAuth.createUserWithEmailAndPassword(email, pass)
                         .addOnCompleteListener { task ->
                             if (task.isSuccessful) {
-                                // If the sign-up was successful, navigate to the SignInFragment
+                                // jesli sukces nawiguj do home
                                 if (isAdded) {
                                     navController.navigate(R.id.action_signUpFragment_to_signInFragment)
                                 }
@@ -82,7 +80,6 @@ class SignUpFragment : Fragment() {
                                     }
 
                                     else -> {
-                                        // For other errors, we just show the exception message
                                         Toast.makeText(
                                             requireContext(),
                                             task.exception?.localizedMessage ?: "Wystąpił błąd.",

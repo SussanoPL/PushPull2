@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.pushpull.HomeFragment"
+        android:name="com.example.pushpull.fragments.HomeFragment"
         android:label="Plan treningowy"
         tools:layout="@layout/fragment_home">
         <action
@@ -23,17 +23,17 @@
     </fragment>
     <fragment
         android:id="@+id/historyFragment"
-        android:name="com.example.pushpull.HistoryFragment"
+        android:name="com.example.pushpull.fragments.HistoryFragment"
         android:label="Historia treningów"
         tools:layout="@layout/fragment_history" />
     <fragment
         android:id="@+id/tipsFragment"
-        android:name="com.example.pushpull.TipsFragment"
+        android:name="com.example.pushpull.fragments.TipsFragment"
         android:label="Porady"
         tools:layout="@layout/fragment_tips" />
     <fragment
         android:id="@+id/userFragment"
-        android:name="com.example.pushpull.UserFragment"
+        android:name="com.example.pushpull.fragments.UserFragment"
         android:label="Twoje Konto"
         tools:layout="@layout/fragment_user" >
         <action
@@ -42,7 +42,7 @@
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
-        android:name="com.example.pushpull.SearchFragment"
+        android:name="com.example.pushpull.fragments.SearchFragment"
         android:label="Baza danych ćwiczeń"
         tools:layout="@layout/fragment_search" >
         <argument
@@ -74,7 +74,7 @@
     </fragment>
     <fragment
         android:id="@+id/exerciseListFragment"
-        android:name="com.example.pushpull.ExerciseListFragment"
+        android:name="com.example.pushpull.fragments.ExerciseListFragment"
         android:label="Lista dostępnych ćwiczeń"
         tools:layout="@layout/fragment_exercise_list" >
         <argument
@@ -102,12 +102,12 @@
     </fragment>
     <fragment
         android:id="@+id/exerciseDetailsFragment"
-        android:name="com.example.pushpull.ExerciseDetailsFragment"
+        android:name="com.example.pushpull.fragments.ExerciseDetailsFragment"
         android:label="Szczegóły ćwiczenia"
         tools:layout="@layout/fragment_exercise_details" />
     <fragment
         android:id="@+id/trainingFragment"
-        android:name="com.example.pushpull.TrainingFragment"
+        android:name="com.example.pushpull.fragments.TrainingFragment"
         android:label="Szczegóły treningu"
         tools:layout="@layout/fragment_training" >
         <action
@@ -116,7 +116,7 @@
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
-        android:name="com.example.pushpull.SignUpFragment"
+        android:name="com.example.pushpull.fragments.SignUpFragment"
         android:label="SignUpFragment" >
         <action
             android:id="@+id/action_signUpFragment_to_signInFragment"
@@ -124,7 +124,7 @@
     </fragment>
     <fragment
         android:id="@+id/signInFragment"
-        android:name="com.example.pushpull.SignInFragment"
+        android:name="com.example.pushpull.fragments.SignInFragment"
         android:label="SignInFragment" >
         <action
             android:id="@+id/action_signInFragment_to_signUpFragment"
