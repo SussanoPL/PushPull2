@@ -224,7 +224,7 @@ class TrainingFragment : Fragment() {
             } else {
                 String.format("%.0f", detail.weight)
             }
-            val weightTextView = createDetailTextView("Waga: $formattedWeight kg", 14f)
+            val weightTextView = createDetailTextView("Masa: $formattedWeight kg", 14f)
             exerciseLayout.addView(weightTextView)
 
             exerciseContainer.addView(exerciseLayout)

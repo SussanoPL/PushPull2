@@ -31,7 +31,7 @@ class ExerciseDetailsViewModel : ViewModel() {
         if (exerciseName.isNotEmpty()) {
             db.collection("Exercises")
                 .whereEqualTo("name", exerciseName)
-                .limit(1) // Assuming exercise names are unique
+                .limit(1)
                 .addSnapshotListener { querySnapshot, firestoreException ->
                     if (firestoreException != null) {
                         _errorMessage.value = firestoreException.localizedMessage
@@ -45,7 +45,7 @@ class ExerciseDetailsViewModel : ViewModel() {
                         _description.value = document.getString("description")
                         _equipment.value = document.getString("equipment")
                         _muscleGroup.value = document.getString("muscleGroup")
-                        _userId.value = document.getString("userId") // Fetch and set the userId
+                        _userId.value = document.getString("userId")
                     } else {
                         _errorMessage.value = "Nie znaleziono ćwiczenia z tą nazwą."
                     }
